@@ -2,7 +2,7 @@
 title: "projet"
 output: html_document
 date: "2025-04-08"
-runtime: shiny
+#runtime: shiny
 ---
 
 This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
@@ -18,9 +18,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(ggplot2)
-library(gridExtra)
-library(scales)
-library(shiny)
+#library(gridExtra)
+#library(scales)
+#library(shiny)
 ```
 
 To learn more, see [Interactive Documents](http://rmarkdown.rstudio.com/authoring_shiny.html).
@@ -30,12 +30,142 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 ```{r}
 CovidData <- read.csv("../data/owid-covid-data.csv", sep = ",")
 CovidData %>% head(10)
-
 ```
 
 ```{r}
+ListeLocation <- CovidData %>% select(location) %>% distinct()
+ListeLocation
+```
+
+```{r}
+continents <- c("Africa", "Asia", "Europe", "North America",
+    "South America", "Oceania")
+
+continents
 
 ```
+```{r}
+regions_agregats <- c(
+    "World", "European Union (27)", 
+    "High-income countries", "Low-income countries",
+    "Lower-middle-income countries", "Upper-middle-income countries"
+  )
+regions_agregats
+```
+
+```{r}
+territory_or_dependency <- c(
+      "England", "Scotland", "Wales", "Northern Ireland", "Puerto Rico", 
+      "Hong Kong", "Macao", "Greenland", "Guadeloupe", "Martinique", 
+      "French Guiana", "French Polynesia", "Reunion", "Mayotte", "New Caledonia", 
+      "Aruba", "Curacao", "Bonaire Sint Eustatius and Saba", "Gibraltar", 
+      "Guernsey", "Jersey", "Isle of Man", "Faroe Islands", "Falkland Islands", 
+      "Saint Martin (French part)", "Sint Maarten (Dutch part)", "Saint Barthelemy", 
+      "Saint Pierre and Miquelon", "Cayman Islands", "Bermuda", "British Virgin Islands", 
+      "United States Virgin Islands", "Turks and Caicos Islands", "Anguilla", 
+      "Montserrat", "Cook Islands", "Tokelau", "Niue", "Pitcairn", "Western Sahara", 
+      "Palestine", "Kosovo", "Northern Cyprus", "Taiwan", "Vatican", 
+      "Micronesia (country)")
+
+territory_or_dependency
+```
+
+```{r}
+CovidData <- CovidData %>%
+  mutate(type_location = case_when(
+    location %in% continents ~ "continent",
+    location %in% regions_agregats ~ "region_or_aggregate",
+    location %in% territory_or_dependency ~ "territory_or_dependency",
+    .default = "country"
+  ))
+CovidData
+```
+
+```{r}
+CovidData %>% select(location, type_location) %>% distinct()
+```
+
+
+```{r}
+CovidData %>% filter(location == 'France')
+```
+
+### Nettoyage des colonnes communes inutilisés
+
+```{r}
+CovidDataClean <- CovidData %>% select(-iso_code, -new_cases_smoothed,-new_deaths_smoothed, -new_cases_smoothed_per_million, -new_deaths_smoothed_per_million, -new_tests_smoothed, -new_tests_smoothed_per_thousand, -new_vaccinations_smoothed, -new_vaccinations_smoothed_per_million, -new_people_vaccinated_smoothed, -new_people_vaccinated_smoothed_per_hundred)
+
+CovidDataClean
+```
+
+
+### 
+```{r}
+df_evolution_temporelle <- CovidDataClean %>% select(continent, location, date, total_cases, new_cases, total_deaths, total_cases_per_million, new_cases_per_million, total_deaths_per_million, new_deaths_per_million, reproduction_rate, stringency_index)
+
+df_evolution_temporelle
+```
+
+```{r}
+df_evolution_temporelle %>% mutate(
+    reproduction_rate_7d_avg = sapply(1:nrow(df_evolution_temporelle), function(i) {
+      if (i < 7) {
+        return(NA)
+      } else {
+        return(mean(df_evolution_temporelle$reproduction_rate[(i-6):i], na.rm = TRUE))
+      }
+    }),
+    
+    stringency_index_7d_avg = sapply(1:nrow(df_evolution_temporelle), function(i) {
+      if (i < 7) {
+        return(NA)
+      } else {
+        return(mean(df_evolution_temporelle$stringency_index[(i-6):i], na.rm = TRUE))
+      }
+    })
+  )
+
+df_evolution_temporelle
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## -----------------------------------------------------------------  ALIOU -------------------------------------------------------------
+
+
+## -----------------------------------------------------------------  SALAH -------------------------------------------------------------
+
+
+## -----------------------------------------------------------------  SIAKA -------------------------------------------------------------
+
+
+## -----------------------------------------------------------------  SADOU -------------------------------------------------------------
+
+
+## -----------------------------------------------------------------  ZINEB -------------------------------------------------------------
+
+
+
+
+
+
+
+
+## =============================================== FIN ================================================================
 
 
 ## Inputs and Outputs
