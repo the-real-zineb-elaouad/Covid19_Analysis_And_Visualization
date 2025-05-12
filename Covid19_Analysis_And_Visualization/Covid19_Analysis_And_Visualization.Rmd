@@ -30,12 +30,10 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 ```{r}
 CovidData <- read.csv("../data/owid-covid-data.csv", sep = ",")
 CovidData %>% head(10)
-```
-
-```{r}
 ListeLocation <- CovidData %>% select(location) %>% distinct()
 ListeLocation
 ```
+
 
 ```{r}
 continents <- c("Africa", "Asia", "Europe", "North America",
@@ -45,6 +43,10 @@ continents
 
 ```
 ```{r}
+continents <- c("Africa", "Asia", "Europe", "North America",
+    "South America", "Oceania")
+
+continents
 regions_agregats <- c(
     "World", "European Union (27)", 
     "High-income countries", "Low-income countries",
@@ -96,6 +98,7 @@ CovidData %>% filter(location == 'France')
 CovidDataClean <- CovidData %>% select(-iso_code, -new_cases_smoothed,-new_deaths_smoothed, -new_cases_smoothed_per_million, -new_deaths_smoothed_per_million, -new_tests_smoothed, -new_tests_smoothed_per_thousand, -new_vaccinations_smoothed, -new_vaccinations_smoothed_per_million, -new_people_vaccinated_smoothed, -new_people_vaccinated_smoothed_per_hundred)
 
 CovidDataClean
+
 ```
 
 
@@ -131,6 +134,65 @@ df_evolution_temporelle
 
 
 ## -----------------------------------------------------------------  ZINEB -------------------------------------------------------------
+```{r}
+#question :Quelle est la relation entre le nombre de cas et le nombre de décès (taux de létalité) ?
+#question : Relation entre nombre de cas et décès (taux de létalité)
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+
+# Solution 1 : Utilisation du package here pour les chemins relatifs
+covid_data <- read.csv("../data/owid-covid-data.csv", sep = ",") 
+
+
+# Conversion et filtrage des dates
+covid_data <- covid_data %>% 
+  mutate(date = ymd(date)) %>% 
+  filter(date <= "2022-12-31")
+
+# Vérification des noms de continents
+unique(covid_data$continent) # Ajuster les filtres selon les résultats
+
+# Nettoyage des données avec vérifications
+df_summary <- covid_data %>%
+  filter(
+    continent %in% c("Africa", "Asia", "Europe", "North America", "South America", "Oceania"),
+    !is.na(total_cases),
+    !is.na(total_deaths),
+    total_cases > 0,
+    total_deaths > 0
+  ) %>%
+  group_by(location, continent) %>%
+  summarise(
+    total_cases = max(total_cases, na.rm = TRUE),
+    total_deaths = max(total_deaths, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Vérification intermédiaire
+glimpse(df_summary)
+
+# Visualisation avec gestion des valeurs extrêmes
+ggplot(df_summary, aes(x = total_cases, y = total_deaths)) +
+  geom_point(aes(color = continent), alpha = 0.6, size = 2.5) +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "darkred") +
+  scale_x_log10(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+  scale_y_log10(labels = scales::label_number(scale_cut = scales::cut_short_scale())) +
+  labs(
+    title = "Relation cas-décès COVID-19 par pays (2020-2022)",
+    subtitle = "Données Our World in Data",
+    x = "Cas confirmés (log10)",
+    y = "Décès enregistrés (log10)",
+    color = "Continent"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "bottom")
+
+
+
+```
+
+
 
 
 ## -----------------------------------------------------------------  SADOU -------------------------------------------------------------
