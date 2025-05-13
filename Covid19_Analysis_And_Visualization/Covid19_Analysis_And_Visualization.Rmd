@@ -31,9 +31,78 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 CovidData <- read.csv("../data/owid-covid-data.csv", sep = ",")
 CovidData %>% head(10)
 ```
+# I/ Préparation et nettoyage des données
+## 1. Vérification et convertions des types de variables
+```{r}
+str(CovidData)
+```
+### Conversion de la date et des variables catégorielles
+```{r}
+CovidData$date <- as.Date(CovidData$date)
+CovidData$continent <- as.factor(CovidData$continent)
+CovidData$location <- as.factor(CovidData$location)
+CovidData$iso_code <- as.factor(CovidData$iso_code)
+str(CovidData)
+
+```
+## 2. Suppression des colonnes avec plus de 90 % de valeurs manquantes
+toutes les colonnes contenant plus de 90% de valeurs manquantes (NA) ont été retirées. Leurs noms sont conservés dans une variable colonnes_supprimees à des fins de traçabilité.
+```{r}
+na_ratio <- colMeans(is.na(CovidData))
+
+colonnes_supprimees <- names(na_ratio[na_ratio > 0.9])
+
+CovidData_clean <- CovidData[, !(names(CovidData) %in% colonnes_supprimees)]
+
+colonnes_supprimees
+```
+## 3. Détection, traitement et suppression des doublons
+### - Detectetion
+#### Nous avons détecté 7 770 doublons sur la combinaison location + date. Ces doublons n'étaient pas de simples répétitions, mais souvent deux lignes contenant des données partielles. C'EST DES DONNEES FRAGMENTEES
 
 ```{r}
-ListeLocation <- CovidData %>% select(location) %>% distinct()
+doublons <- duplicated(CovidData_clean[, c("date", "location")])
+CovidData_clean[doublons, ]
+```
+```{r}
+doublons <- CovidData_clean %>%
+  filter(duplicated(select(., location, date)) | duplicated(select(., location, date), fromLast = TRUE))
+
+
+doublons <- doublons %>% arrange(location, date)
+doublons
+```
+### - Traitement des doublons
+#### fusionné chaque groupe de doublons (location, date) en une seule ligne, en conservant Pour chaque colonne, la valeur non manquante (non-NA) si elle existe. Si les deux valeurs sont NA, le NA est conservé
+```{r}
+fusionnes <- doublons %>%
+  group_by(location, date) %>%
+  summarise(across(everything(), ~ first(na.omit(.))), .groups = "drop")
+```
+
+### - Suppression des doublons après fusion
+#### Suppression des anciennes lignes doublées du jeu de données initial + Ajout des lignes fusionnées à leur place
+```{r}
+CovidData_sans_doublons <- CovidData_clean %>%
+  filter(!(paste(location, date) %in% paste(doublons$location, doublons$date)))
+
+CovidData_clean <- bind_rows(CovidData_sans_doublons, fusionnes) %>%
+  arrange(location, date)
+
+CovidData_clean
+```
+
+## 4. ReVérification des donees et Chargement dans CovidData_Prepared 
+```{r}
+str(CovidData_clean)
+summary(CovidData_clean)
+CovidData_Prepared <- CovidData_clean
+```
+
+# ++++++++++++++++++++++++++ FIN PREPARATION DES DONNEES +++++++++++++++++++++++++++++++
+
+```{r}
+ListeLocation <- CovidData_Prepared %>% select(location) %>% distinct()
 ListeLocation
 ```
 
@@ -71,25 +140,25 @@ territory_or_dependency
 ```
 
 ```{r}
-CovidData <- CovidData %>%
+CovidData_Prepared <- CovidData_Prepared %>%
   mutate(type_location = case_when(
     location %in% continents ~ "continent",
     location %in% regions_agregats ~ "region_or_aggregate",
     location %in% territory_or_dependency ~ "territory_or_dependency",
     .default = "country"
   ))
-CovidData
+CovidData_Prepared
 ```
 
 ```{r}
-CovidData %>% select(location, type_location) %>% distinct()
+CovidData_Prepared %>% select(location, type_location) %>% distinct()
 ```
 
 
 ```{r}
-CovidData %>% filter(location == 'France')
+CovidData_Prepared %>% filter(location == 'France')
 ```
-
+# --------------------------------------------------------------------------------
 ### Nettoyage des colonnes communes inutilisés
 
 ```{r}
@@ -101,11 +170,12 @@ CovidDataClean
 
 ### 
 ```{r}
-df_evolution_temporelle <- CovidDataClean %>% select(continent, location, date, total_cases, new_cases, total_deaths, total_cases_per_million, new_cases_per_million, total_deaths_per_million, new_deaths_per_million, reproduction_rate, stringency_index)
+df_evolution_temporelle <- CovidDataClean %>% select(continent, location, date, total_cases, new_cases, total_deaths, total_cases_per_million, new_cases_per_million, total_deaths_per_million, new_deaths_per_million, reproduction_rate, stringency_index, type_location)
 
 df_evolution_temporelle
 ```
 
+# --------------------------------------------------------------------------------
 
 
 
@@ -138,6 +208,35 @@ df_evolution_temporelle
 
 ## -----------------------------------------------------------------  ALIOU -------------------------------------------------------------
 
+```{r}
+Africa <- df_evolution_temporelle %>% filter(continent == "Africa")
+Africa
+```
+```{r}
+ggplot(Africa, aes(x = date, y = new_cases)) +
+  geom_line() +
+  labs(title = "Évolution mondiale des cas COVID-19", x = "Date", y = "Cas journaliers lissés")
+```
+
+
+```{r}
+ggplot(data = Africa) +  
+  aes(x = long, y = lat, group = group) + 
+  geom_polygon(fill = "blue", alpha = .4) + 
+  theme_classic() +
+  coord_map(projection = "mercator") +
+  geom_point(data = us_wind %>% filter(ylat < 50 & ylat > 25), 
+             mapping = aes(x = xlong, y = ylat, group = NULL), 
+             size = .5, col = "orange", alpha = .6) + 
+  theme_void() + 
+  labs(title = "Wind turbines in the continental US") + 
+  labs(caption = "Tidy Tuesday exercise") +
+  labs(subtitle = "Data Source: | Visualization: Gina Reynolds")
+```
+
+```{r}
+CovidDataClean %>% filter(location == "Martinique")
+```
 
 
 
