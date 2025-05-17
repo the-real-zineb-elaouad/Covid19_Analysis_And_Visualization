@@ -78,6 +78,7 @@ doublons
 fusionnes <- doublons %>%
   group_by(location, date) %>%
   summarise(across(everything(), ~ first(na.omit(.))), .groups = "drop")
+fusionnes
 ```
 
 ### - Suppression des doublons après fusion
@@ -203,7 +204,35 @@ df_evolution_temporelle
 ## -----------------------------------------------------------------  ZINEB -------------------------------------------------------------
 
 
-## -----------------------------------------------------------------  SADOU -------------------------------------------------------------
+## -----------------------------------------------------------------  SADOU
+
+# récupérerer les 10 pays les plus touchées par le covid-19 en se basant sur le nombre total de cas enregister pour chaque pays
+
+```{r fig.width=12, fig.height=8}
+
+# la liste des 10 pays les plus touchés et leurs totals de cas  
+
+top10contaminedCountries <-CovidData_Prepared %>%
+  filter(type_location %in% c("country","territory_or_dependency"))%>%
+  group_by(location) %>%
+  summarize(max_cases = max(total_cases, na.rm = TRUE)) %>% arrange((desc(max_cases)))%>% slice(1:10)
+
+# filtre de la dataset sur ces 10 pays
+
+top_10_countriesName<-top10contaminedCountries$location
+
+data_top10_contamined_countries <-CovidData_Prepared %>%
+  filter(location %in% top_10_countriesName)
+data_top10_contamined_countries
+
+# Le graphe montrant l'évolution temporelle du covid sur ces 10 pays 
+
+
+
+
+
+```
+-------------------------------------------------------------
 
 
 ## -----------------------------------------------------------------  ALIOU -------------------------------------------------------------
