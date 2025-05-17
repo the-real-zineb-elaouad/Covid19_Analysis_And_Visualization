@@ -207,35 +207,43 @@ df_evolution_temporelle
 
 
 ## -----------------------------------------------------------------  ALIOU -------------------------------------------------------------
-
 ```{r}
-Africa <- df_evolution_temporelle %>% filter(continent == "Africa")
-Africa
+world_data <- CovidData_Prepared %>%
+  filter(location == "World") %>%
+  select(date, new_cases_smoothed, new_deaths_smoothed)
+
+ggplot(world_data, aes(x = date)) +
+  geom_line(aes(y = new_cases_smoothed), color = "steelblue", size = 1.2) +
+  geom_line(aes(y = new_deaths_smoothed), color = "red", size = 1, linetype = "dashed") +
+  scale_x_date(
+    date_breaks = "1 month",  # une graduation tous les mois
+    date_labels = "%b %Y"     # format abrégé du mois + année (ex: Jan 2021)
+  ) +
+  labs(
+    title = "Évolution mensuelle des cas et des décès COVID-19 dans le monde",
+    subtitle = "Cas et décès lissés sur 7 jours",
+    x = "Mois", y = "Nombre quotidien (moyenne mobile)",
+    caption = "Source : Our World in Data"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # rotation des mois
 ```
 ```{r}
-ggplot(Africa, aes(x = date, y = new_cases)) +
-  geom_line() +
-  labs(title = "Évolution mondiale des cas COVID-19", x = "Date", y = "Cas journaliers lissés")
-```
+continent_data <- CovidData_Prepared %>%
+  filter(!is.na(continent)) %>%
+  group_by(continent, date) %>%
+  summarise(new_cases = sum(new_cases_smoothed, na.rm = TRUE), .groups = "drop")
 
-
-```{r}
-ggplot(data = Africa) +  
-  aes(x = long, y = lat, group = group) + 
-  geom_polygon(fill = "blue", alpha = .4) + 
-  theme_classic() +
-  coord_map(projection = "mercator") +
-  geom_point(data = us_wind %>% filter(ylat < 50 & ylat > 25), 
-             mapping = aes(x = xlong, y = ylat, group = NULL), 
-             size = .5, col = "orange", alpha = .6) + 
-  theme_void() + 
-  labs(title = "Wind turbines in the continental US") + 
-  labs(caption = "Tidy Tuesday exercise") +
-  labs(subtitle = "Data Source: | Visualization: Gina Reynolds")
-```
-
-```{r}
-CovidDataClean %>% filter(location == "Martinique")
+ggplot(continent_data, aes(x = date, y = new_cases)) +
+  geom_line(color = "darkorange", size = 1) +
+  facet_wrap(~continent, scales = "free_y") +
+  labs(
+    title = "Évolution des cas COVID-19 par continent",
+    subtitle = "Nouveaux cas lissés (7 jours)",
+    x = "Date", y = "Cas quotidiens",
+    caption = "Source : Our World in Data"
+  ) +
+  theme_minimal()
 ```
 
 
