@@ -421,57 +421,6 @@ browseURL(temp_file)
 
 ```
 
-
-```{r}
-# Sans transformation
-g2<-ggplot(data_dual, aes(x = date)) +
-  geom_line(aes(y = new_cases_smoothed, color = "Nouveaux cas (7j)"), size = 1) +
-  geom_line(aes(y = new_deaths_smoothed, color = "Décès (7j)"), size = 1) +  # Pas de *20
-
-  facet_wrap(~location, scales = "free_y", ncol = 2) +
-  
-  scale_x_date(
-    date_breaks = "3 months",
-    date_labels = "%b %Y"
-  ) +
-  
-  scale_y_continuous(
-    name = "Valeurs brutes (moyenne 7j)",
-    labels = scales::comma
-  ) +
-  
-  scale_color_manual(
-    values = c("Nouveaux cas (7j)" = "steelblue", "Décès (7j)" = "firebrick")
-  ) +
-  
-  labs(
-    title = "Comparaison sans transformation des cas et décès COVID-19",
-    x = "Date",
-    color = "Indicateur"
-  ) +
-  
-  theme_minimal(base_size = 12) +
-  theme(
-    strip.text = element_text(face = "bold"),
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    plot.title = element_text(face = "bold", hjust = 0.5),
-    legend.position = "bottom"
-  )
-# Crée le graphique interactif
-interactive_plot <- ggplotly(g2)
-
-# Sauvegarde dans un fichier temporaire
-temp_file <- tempfile(fileext = ".html")
-saveWidget(interactive_plot, temp_file)
-
-# Ouvre dans le navigateur
-browseURL(temp_file)
-
-
-```
-
-
-
 -------------------------------------------------------------
 
 
