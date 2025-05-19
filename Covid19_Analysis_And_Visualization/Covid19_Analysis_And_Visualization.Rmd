@@ -2,6 +2,7 @@
 title: "projet"
 output: html_document
 date: "2025-04-08"
+install.packages("patchwork")
 #runtime: shiny
 ---
 
@@ -18,6 +19,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(plotly)
+library(htmlwidgets)
 #library(gridExtra)
 #library(scales)
 #library(shiny)
@@ -206,34 +209,213 @@ df_evolution_temporelle
 
 ## -----------------------------------------------------------------  SADOU
 
-# récupérerer les 10 pays les plus touchées par le covid-19 en se basant sur le nombre total de cas enregister pour chaque pays
+# récupérerer les 5 pays d'europe les plus touchées par le covid-19 en se basant sur le nombre total de cas enregister pour chaque pays
 
 ```{r fig.width=12, fig.height=8}
 
-# la liste des 10 pays les plus touchés et leurs totals de cas  
+# la liste des 5 pays les plus touchés et leurs totals de cas  
 
-top10contaminedCountries <-CovidData_Prepared %>%
-  filter(type_location %in% c("country","territory_or_dependency"))%>%
+top5EuropeanContaminedCountries <-CovidData_Prepared %>%
+  filter(type_location %in% c("country","territory_or_dependency"), continent =="Europe") %>%
   group_by(location) %>%
-  summarize(max_cases = max(total_cases, na.rm = TRUE)) %>% arrange((desc(max_cases)))%>% slice(1:10)
+  summarize(max_cases = max(total_cases, na.rm = TRUE)) %>% arrange((desc(max_cases)))%>% slice(1:5)
+top5EuropeanContaminedCountries
 
-# filtre de la dataset sur ces 10 pays
+# filtre de la dataset sur ces 5 pays
 
-top_10_countriesName<-top10contaminedCountries$location
+top_5_countriesName<-top5EuropeanContaminedCountries$location
 
-data_top10_contamined_countries <-CovidData_Prepared %>%
-  filter(location %in% top_10_countriesName)
-data_top10_contamined_countries
+data_top5_contamined_countries <-CovidData_Prepared %>%
+  filter(location %in% top_5_countriesName)
+#data_top5_contamined_countries
+```
 
-# Le graphe montrant l'évolution temporelle du covid sur ces 10 pays 
 
 
+# Le graphe représentant le nombre moyen par jour de cas de décés enregisté pour les 5 pays les plus touchés
+
+```{r fig.width=12, fig.height=8}
+
+library(ggplot2)
+library(dplyr)
+library(patchwork) 
+
+# Graphique pour les 5 Europe les plus touchés
+
+p1 <- ggplot(data_top5_contamined_countries, aes(x = date, y = new_cases_smoothed, color = location)) +
+  geom_line(size = 0.6) +
+  
+  # AXES
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%b %Y",
+    date_minor_breaks = "1 month"
+  ) +
+  scale_y_continuous(
+    labels = scales::comma
+  ) +
+  
+  # TITRES ET LIBELLÉS
+  labs(
+    title = "Nombre moyens par jour de nouveaux cas enregisté pour les 5  pays les plus touchés d'Europe",
+    x = "Date",
+    y = "Nombre moyen par jour de nouveaux cas"
+  ) +
+  
+  # THÈME GÉNÉRAL
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    axis.title = element_text(size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    
+    # GRILLE
+    panel.grid.major = element_line(color = "gray80", size = 0.3),
+    panel.grid.minor = element_line(color = "gray90", size = 0.2, linetype = "dotted"),
+    
+    # LÉGENDE
+    legend.position = "bottom"
+  )
+
+
+
+
+# Crée le graphique interactif
+interactive_plot <- ggplotly(p1)
+
+# Sauvegarde dans un fichier temporaire
+temp_file <- tempfile(fileext = ".html")
+saveWidget(interactive_plot, temp_file)
+
+# Ouvre dans le navigateur
+browseURL(temp_file)
 
 
 
 ```
--------------------------------------------------------------
 
+
+```{r fig.width=12, fig.height=8}
+
+library(ggplot2)
+library(dplyr)
+library(patchwork) 
+
+# Graphique de l'évolutions moyen par jour des nouveaux décés confirmés pour les 5 pays Europe les plus touchés
+
+p1 <- ggplot(data_top5_contamined_countries, aes(x = date, y = new_deaths_smoothed, color = location)) +
+  geom_line(size = 0.6) +
+  
+  # AXES
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%b %Y",
+    date_minor_breaks = "1 month"
+  ) +
+  scale_y_continuous(
+    labels = scales::comma
+  ) +
+  
+  # TITRES ET LIBELLÉS
+  labs(
+    title = "L'évolution du nombre moyens par jour de nouveaux décés enregisté pour les 5  pays les plus touchés d'Europe",
+    x = "Date",
+    y = "Nombre moyen par jour de nouveaux de décés"
+  ) +
+  
+  # THÈME GÉNÉRAL
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    axis.title = element_text(size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    
+    # GRILLE
+    panel.grid.major = element_line(color = "gray80", size = 0.3),
+    panel.grid.minor = element_line(color = "gray90", size = 0.2, linetype = "dotted"),
+    
+    # LÉGENDE
+    legend.position = "bottom"
+  )
+
+
+
+
+# Crée le graphique interactif
+interactive_plot <- ggplotly(p1)
+
+# Sauvegarde dans un fichier temporaire
+temp_file <- tempfile(fileext = ".html")
+saveWidget(interactive_plot, temp_file)
+
+# Ouvre dans le navigateur
+browseURL(temp_file)
+
+
+
+```
+
+```{r fig.width=12, fig.height=8}
+library(ggplot2)
+library(dplyr)
+
+# On crée un nouveau data frame avec les deux variables dans des colonnes séparées
+
+data_dual <- data_top5_contamined_countries %>%
+  select(date, location, new_cases_smoothed, new_deaths_smoothed)
+
+compare <- ggplot(data_dual, aes(x = date)) +
+  geom_line(aes(y = new_cases_smoothed, color = "Nouveaux cas (7j)"), size = 1) +
+  geom_line(aes(y = new_deaths_smoothed * 20, color = "Décès (7j) x20"), size = 1) +  # Multiplié pour rendre visible
+
+  facet_wrap(~location, scales = "free_y", ncol = 2) +
+  
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%b %Y"
+  ) +
+  
+  scale_y_continuous(
+    name = "Nouveaux cas (moyenne 7j)",
+    labels = scales::comma,
+    sec.axis = sec_axis(~ . / 20, name = "Décès (moyenne 7j)")  # Transformation inverse
+  ) +
+  
+  scale_color_manual(
+    values = c("Nouveaux cas (7j)" = "steelblue", "Décès (7j) x20" = "firebrick")
+  ) +
+  
+  labs(
+    title = "Comparaison des nouveaux cas et des décès COVID-19 (moyenne 7j)",
+    x = "Date",
+    color = "Indicateur"
+  ) +
+  
+  theme_minimal(base_size = 12) +
+  theme(
+    strip.text = element_text(face = "bold", size = 11),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    legend.position = "bottom"
+  )
+
+# Crée le graphique interactif
+interactive_plot <- ggplotly(compare)
+
+# Sauvegarde dans un fichier temporaire
+temp_file <- tempfile(fileext = ".html")
+saveWidget(interactive_plot, temp_file)
+
+# Ouvre dans le navigateur
+browseURL(temp_file)
+
+```
+
+
+
+-------------------------------------------------------------
 
 ## -----------------------------------------------------------------  ALIOU -------------------------------------------------------------
 
