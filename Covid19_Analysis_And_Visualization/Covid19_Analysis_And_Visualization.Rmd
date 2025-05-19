@@ -201,7 +201,11 @@ df_evolution_temporelle
 ## -----------------------------------------------------------------  SALAH -------------------------------------------------------------
 
 
-## -----------------------------------------------------------------  SIAKA -------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------
 
 
 ## -----------------------------------------------------------------  ZINEB -------------------------------------------------------------
@@ -232,7 +236,7 @@ data_top5_contamined_countries <-CovidData_Prepared %>%
 
 
 
-# Le graphe représentant le nombre moyen par jour de cas de décés enregisté pour les 5 pays les plus touchés
+# Le graphe représentant nombre moyen par jour de nouveaux cas enregisté pour les 5 pays les plus touchés d'Europe
 
 ```{r fig.width=12, fig.height=8}
 
@@ -240,7 +244,7 @@ library(ggplot2)
 library(dplyr)
 library(patchwork) 
 
-# Graphique pour les 5 Europe les plus touchés
+# Graphique pour les 5 Europe les plus touchés plus touchées d'europe
 
 p1 <- ggplot(data_top5_contamined_countries, aes(x = date, y = new_cases_smoothed, color = location)) +
   geom_line(size = 0.6) +
@@ -248,7 +252,7 @@ p1 <- ggplot(data_top5_contamined_countries, aes(x = date, y = new_cases_smoothe
   # AXES
   scale_x_date(
     date_breaks = "3 months",
-    date_labels = "%b %Y",
+    date_labels = "%d %b %Y",
     date_minor_breaks = "1 month"
   ) +
   scale_y_continuous(
@@ -257,7 +261,7 @@ p1 <- ggplot(data_top5_contamined_countries, aes(x = date, y = new_cases_smoothe
   
   # TITRES ET LIBELLÉS
   labs(
-    title = "Nombre moyens par jour de nouveaux cas enregisté pour les 5  pays les plus touchés d'Europe",
+    title = "Nombre moyens par jour de nouveaux cas enregisté pour les 5  pays les plus touchés d'Europe sur toute la période",
     x = "Date",
     y = "Nombre moyen par jour de nouveaux cas"
   ) +
@@ -296,6 +300,8 @@ browseURL(temp_file)
 ```
 
 
+# Le graphe représentant nombre moyen par jour de nouveaux décés enregisté pour les 5 pays les plus touchés d'Europe
+
 ```{r fig.width=12, fig.height=8}
 
 library(ggplot2)
@@ -310,7 +316,7 @@ p1 <- ggplot(data_top5_contamined_countries, aes(x = date, y = new_deaths_smooth
   # AXES
   scale_x_date(
     date_breaks = "3 months",
-    date_labels = "%b %Y",
+    date_labels = "%d %b %Y",
     date_minor_breaks = "1 month"
   ) +
   scale_y_continuous(
@@ -319,7 +325,7 @@ p1 <- ggplot(data_top5_contamined_countries, aes(x = date, y = new_deaths_smooth
   
   # TITRES ET LIBELLÉS
   labs(
-    title = "L'évolution du nombre moyens par jour de nouveaux décés enregisté pour les 5  pays les plus touchés d'Europe",
+    title = "Nombre moyens par jour de nouveaux décés enregisté pour les 5  pays les plus touchés d'Europe sur toute la période",
     x = "Date",
     y = "Nombre moyen par jour de nouveaux de décés"
   ) +
@@ -357,24 +363,26 @@ browseURL(temp_file)
 
 ```
 
+# L'évolution du nombre moyen par jour de nouveau cas et de nouveau décés pour chacun des 5 pays les plus touchés de l'Europe sur toute la période 
+
+
 ```{r fig.width=12, fig.height=8}
 library(ggplot2)
 library(dplyr)
 
-# On crée un nouveau data frame avec les deux variables dans des colonnes séparées
 
 data_dual <- data_top5_contamined_countries %>%
   select(date, location, new_cases_smoothed, new_deaths_smoothed)
 
 compare <- ggplot(data_dual, aes(x = date)) +
-  geom_line(aes(y = new_cases_smoothed, color = "Nouveaux cas (7j)"), size = 1) +
-  geom_line(aes(y = new_deaths_smoothed * 20, color = "Décès (7j) x20"), size = 1) +  # Multiplié pour rendre visible
+  geom_line(aes(y = new_cases_smoothed, color = "Nombre moyen nouveau cas par jour"), size = 1) +
+  geom_line(aes(y = new_deaths_smoothed * 20, color = "Nombre moyen de nouveau décés par jour * 20"), size = 1) +  # Multiplié pour rendre visible
 
   facet_wrap(~location, scales = "free_y", ncol = 2) +
   
   scale_x_date(
     date_breaks = "3 months",
-    date_labels = "%b %Y"
+    date_labels = "%d %b %Y"
   ) +
   
   scale_y_continuous(
@@ -384,11 +392,11 @@ compare <- ggplot(data_dual, aes(x = date)) +
   ) +
   
   scale_color_manual(
-    values = c("Nouveaux cas (7j)" = "steelblue", "Décès (7j) x20" = "firebrick")
+    values = c("Nombre moyen nouveau cas par jour" = "steelblue", "Nombre moyen de nouveau décés par jour * 20" = "firebrick")
   ) +
   
   labs(
-    title = "Comparaison des nouveaux cas et des décès COVID-19 (moyenne 7j)",
+    title = "Courbe de nombre moyes de nouveau cas et décés confimées sur toute la période",
     x = "Date",
     color = "Indicateur"
   ) +
@@ -414,9 +422,151 @@ browseURL(temp_file)
 ```
 
 
+```{r}
+# Sans transformation
+g2<-ggplot(data_dual, aes(x = date)) +
+  geom_line(aes(y = new_cases_smoothed, color = "Nouveaux cas (7j)"), size = 1) +
+  geom_line(aes(y = new_deaths_smoothed, color = "Décès (7j)"), size = 1) +  # Pas de *20
+
+  facet_wrap(~location, scales = "free_y", ncol = 2) +
+  
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%b %Y"
+  ) +
+  
+  scale_y_continuous(
+    name = "Valeurs brutes (moyenne 7j)",
+    labels = scales::comma
+  ) +
+  
+  scale_color_manual(
+    values = c("Nouveaux cas (7j)" = "steelblue", "Décès (7j)" = "firebrick")
+  ) +
+  
+  labs(
+    title = "Comparaison sans transformation des cas et décès COVID-19",
+    x = "Date",
+    color = "Indicateur"
+  ) +
+  
+  theme_minimal(base_size = 12) +
+  theme(
+    strip.text = element_text(face = "bold"),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    legend.position = "bottom"
+  )
+# Crée le graphique interactif
+interactive_plot <- ggplotly(g2)
+
+# Sauvegarde dans un fichier temporaire
+temp_file <- tempfile(fileext = ".html")
+saveWidget(interactive_plot, temp_file)
+
+# Ouvre dans le navigateur
+browseURL(temp_file)
+
+
+```
+
+
 
 -------------------------------------------------------------
 
+
+## -----------------------------------------------------------------  SIAKA
+
+```{r}
+# Charger les librairies
+library(tidyverse)
+library(lubridate)
+
+
+#chargement de donnees
+#covid_data <- read_csv(file="data/owid-covid-data.csv")
+#traitement globale par mois
+
+# Sélectionner les 5 pays les plus touchés en Europe (en nombre total de cas)
+#pays_cibles <- c("France", "Germany", "Italy", "Russia", "United Kingdom")
+
+# Filtrer les colonnes utiles
+donnees_vaccins <- CovidData_Prepared %>%
+  filter(location %in% data_top5_contamined_countries) %>%
+  select(date, pays = location, personnes_vaccinees = people_vaccinated) %>%
+  filter(!is.na(personnes_vaccinees)) %>%
+  mutate(date = as.Date(date))
+
+# Tracer le graphique avec ggplot2
+ggplot(donnees_vaccins, aes(x = date, y = personnes_vaccinees, color = pays)) +
+  geom_line(linewidth = 1) +
+  labs(
+    title = "Évolution du nombre de personnes vaccinées contre la COVID-19",
+    x = "Date",
+    y = "Personnes vaccinées (cumul)",
+    color = "Pays"
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()
+
+#traitement detailles
+donnees_vaccins <- CovidData_Prepared %>%
+  filter(location %in% data_top5_contamined_countries) %>%
+  select(date, pays = location, personnes_vaccinees = total_vaccinations) %>%
+  filter(!is.na(personnes_vaccinees)) %>%
+  mutate(date = as.Date(date))
+
+# Tracer le graphique avec ggplot2
+ggplot(donnees_vaccins, aes(x = date, y = personnes_vaccinees, color = pays)) +
+  geom_line(linewidth = 1) +
+  labs(
+    title = "Évolution du nombre de personnes vaccinées contre la COVID-19 sur 7 jour ",
+    x = "Date",
+    y = "Personnes vaccinées (cumul)",
+    color = "Pays"
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()
+
+#traitement comparer avec le nombre de cas 
+
+# Préparer les données : cas et vaccination
+donnees <- CovidData_Prepared %>%
+  filter(location %in% data_top5_contamined_countries) %>%
+  select(
+    date,
+    pays = location,
+    new_cases_smoothed,
+    taux_vaccination = people_vaccinated
+  ) %>%
+  filter(!is.na(new_cases_smoothed) & !is.na(taux_vaccination)) %>%
+  mutate(date = as.Date(date))
+
+# Créer le graphique combiné
+ggplot(donnees, aes(x = date)) +
+  # Courbe des nouveaux cas (axe gauche)
+  geom_line(aes(y = new_cases_smoothed, color = pays), linewidth = 1) +
+  # Courbe du taux de vaccination (axe droit, après transformation)
+  geom_line(aes(y = taux_vaccination * 1000, linetype = pays), color = "black", linewidth = 0.8) +
+  scale_y_continuous(
+    name = "Nouveaux de covid",
+    sec.axis = sec_axis(~ . / 1000, name = "Taux de vaccination (% population)")
+  ) +
+  labs(
+    title = "Variation des cas COVID-19 et taux de vaccination",
+    x = "Date",
+    color = "Pays (cas)",
+    linetype = "Pays (vaccination)"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title.y.right = element_text(color = "black"),
+    axis.title.y.left = element_text(color = "black")
+  )
+
+```
+
+# -------------------------------------------------------------
 ## -----------------------------------------------------------------  ALIOU -------------------------------------------------------------
 
 ```{r}
