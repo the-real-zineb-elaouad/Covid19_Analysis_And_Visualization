@@ -1,0 +1,984 @@
+---
+title: "*COVID-19 - Analyse et Visualisation*"
+
+author: |
+  *Réalisé par :*  
+  EL AOUAD Zineb  
+  DIALLO Mamadou Aliou  
+  DIALLO Sadou  
+  DOSSO Siaka  
+  EL HIRI Salah Eddine
+
+date: "20 mai 2025"
+
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    number_sections: true
+    highlight: tango
+    latex_engine: pdflatex
+    includes:
+      in_header: preambule.tex
+
+fontsize: 11pt
+geometry: margin=1in
+# runtime: shiny
+---
+
+
+
+# Introduction
+
+Notre étude porte sur l’analyse comparative de l’évolution de la COVID-19 des pays d’Europe les plus impactés, que sont la **France**, l’**Allemagne**, le **Royaume-Uni**, l’**Italie** et la **Russie**.  
+L’observation est faite sur la période de **2020 à 2024**.
+
+Dans le contexte de notre étude, nous avons procédé par **phases** :
+
+- La première phase a consisté au **traitement des données**.  
+- La dernière phase a concerné **l’analyse**.
+
+## Méthodologie
+
+L’analyse des données a mis en évidence :
+- l’**observation globale** de l’évolution de la COVID-19 dans les pays du monde,
+- une **proportionnalité par rapport au nombre d’habitants**,
+- puis une **observation concentrée sur les cinq pays d’Europe** sélectionnés.
+
+Pour mener à bien notre étude, nous avons divisé la tâche de travail en différents **niveaux d’analyse** :
+
+- **Une analyse d’évolution temporelle** portant sur l’évolution du nombre de cas de COVID détectés.
+- **Une analyse comparative** permettant de mettre en évidence :
+  - la différence du nombre de cas détectés entre les pays,
+  - le **taux linéaire** d’évolution.
+- **Des indices d’indicateurs** pour illustrer l’impact des **mesures anti-COVID-19** sur l’évolution du virus, en corrélation avec le **niveau de rigueur** propre à chaque pays.
+- **Une analyse post-COVID-19**.
+
+## Source des données
+
+Les données utilisées proviennent du dépôt GitHub de *Our World In Data*, accessible à l’adresse suivante :  
+<https://github.com/owid/covid-19-data/tree/master/public/data>  
+Le fichier README de ce dépôt fournit des précisions sur les sources et la structure des données.
+
+## Sources d'information
+
+- *Our World In Data* : <https://ourworldindata.org/coronavirus>  
+- L’article dédié aux cas de COVID-19 : <https://ourworldindata.org/covid-cases> d'OWID 
+- **Google** : utilisé pour la vérification des données et des tendances réelles, en complément de nos résultats  
+- **ChatGPT** : pour la validation des informations ainsi que pour la résolution d’erreurs et de bugs dans le code, proposition de graphe adapté à une étude
+
+## Packages à installer (à décommenter au besoins) :
+
+``` r
+# install.packages(c(
+#   "rnaturalearthhires",   # Cartographie haute résolution
+#   "rnaturalearth",        # Données géographiques de base
+#   "rnaturalearthdata",    # Données géopolitiques complémentaires
+#   "sf",                   # Données spatiales (cartes)
+#   "htmlwidgets",          # Widgets HTML interactifs
+#   "plotly",               # Graphiques interactifs
+#   "ggplot2",              # Visualisation de données
+#   "tidyverse"             # Manipulation et traitement de données
+# ))
+```
+
+  
+
+``` r
+library(tidyverse)
+```
+
+```
+## Warning: le package 'tidyverse' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'ggplot2' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'tibble' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'tidyr' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'readr' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'purrr' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'dplyr' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'stringr' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'forcats' a été compilé avec la version R 4.3.3
+```
+
+```
+## Warning: le package 'lubridate' a été compilé avec la version R 4.3.3
+```
+
+```
+## -- Attaching core tidyverse packages ------------------------ tidyverse 2.0.0 --
+## v dplyr     1.1.4     v readr     2.1.5
+## v forcats   1.0.0     v stringr   1.5.1
+## v ggplot2   3.5.1     v tibble    3.2.1
+## v lubridate 1.9.4     v tidyr     1.3.1
+## v purrr     1.0.4     
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+## i Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+```
+
+``` r
+library(ggplot2)
+library(plotly)
+```
+
+```
+## Warning: le package 'plotly' a été compilé avec la version R 4.3.3
+```
+
+```
+## 
+## Attachement du package : 'plotly'
+## 
+## L'objet suivant est masqué depuis 'package:ggplot2':
+## 
+##     last_plot
+## 
+## L'objet suivant est masqué depuis 'package:stats':
+## 
+##     filter
+## 
+## L'objet suivant est masqué depuis 'package:graphics':
+## 
+##     layout
+```
+
+``` r
+library(htmlwidgets)
+```
+
+```
+## Warning: le package 'htmlwidgets' a été compilé avec la version R 4.3.3
+```
+
+``` r
+library(dplyr)
+library(sf)
+```
+
+```
+## Warning: le package 'sf' a été compilé avec la version R 4.3.3
+```
+
+```
+## Linking to GEOS 3.11.2, GDAL 3.8.2, PROJ 9.3.1; sf_use_s2() is TRUE
+```
+
+``` r
+library(rnaturalearthdata)
+```
+
+```
+## Warning: le package 'rnaturalearthdata' a été compilé avec la version R 4.3.3
+```
+
+``` r
+library(rnaturalearth)
+```
+
+```
+## Warning: le package 'rnaturalearth' a été compilé avec la version R 4.3.3
+```
+
+```
+## 
+## Attachement du package : 'rnaturalearth'
+## 
+## L'objet suivant est masqué depuis 'package:rnaturalearthdata':
+## 
+##     countries110
+```
+
+``` r
+library(rnaturalearthhires)
+
+#library(gridExtra)
+library(scales)
+```
+
+```
+## 
+## Attachement du package : 'scales'
+## 
+## L'objet suivant est masqué depuis 'package:purrr':
+## 
+##     discard
+## 
+## L'objet suivant est masqué depuis 'package:readr':
+## 
+##     col_factor
+```
+
+``` r
+#library(shiny)
+```
+
+
+
+# I/ Chargement, Exploration, Préparation et nettoyage des données
+## 0. Chargement
+
+``` r
+CovidData <- read.csv("../data/owid-covid-data.csv", sep = ",")
+#CovidData %>% head(10)
+```
+
+## 1. Vérification et convertions des types de variables
+
+
+``` r
+#str(CovidData)
+```
+### Conversion de la date et des variables catégorielles
+
+``` r
+CovidData$date <- as.Date(CovidData$date)
+CovidData$continent <- as.factor(CovidData$continent)
+CovidData$location <- as.factor(CovidData$location)
+CovidData$iso_code <- as.factor(CovidData$iso_code)
+#str(CovidData)
+```
+## 2. Suppression des colonnes avec plus de 90 % de valeurs manquantes
+toutes les colonnes contenant plus de 90% de valeurs manquantes (NA) ont été retirées. Leurs noms sont conservés dans une variable colonnes_supprimees à des fins de traçabilité.
+
+``` r
+na_ratio <- colMeans(is.na(CovidData))
+
+colonnes_supprimees <- names(na_ratio[na_ratio > 0.9])
+
+CovidData_clean <- CovidData[, !(names(CovidData) %in% colonnes_supprimees)]
+```
+### Colonnes Supprimés : 
+
+``` r
+colonnes_supprimees
+```
+
+```
+##  [1] "icu_patients"                           
+##  [2] "icu_patients_per_million"               
+##  [3] "hosp_patients"                          
+##  [4] "hosp_patients_per_million"              
+##  [5] "weekly_icu_admissions"                  
+##  [6] "weekly_icu_admissions_per_million"      
+##  [7] "weekly_hosp_admissions"                 
+##  [8] "weekly_hosp_admissions_per_million"     
+##  [9] "excess_mortality_cumulative_absolute"   
+## [10] "excess_mortality_cumulative"            
+## [11] "excess_mortality"                       
+## [12] "excess_mortality_cumulative_per_million"
+```
+
+## 3. Détection, traitement et suppression des doublons
+### - Detectetion
+#### Nous avons détecté 7 770 doublons sur la combinaison location + date. Ces doublons n'étaient pas de simples répétitions, mais souvent deux lignes contenant des données partielles. C'EST DES DONNEES FRAGMENTEES
+
+
+``` r
+doublons <- CovidData_clean %>%
+  filter(duplicated(select(., location, date)) | duplicated(select(., location, date), fromLast = TRUE))
+
+
+doublons <- doublons %>% arrange(location, date)
+#doublons
+```
+### - Traitement des doublons
+#### On a fusionné chaque groupe de doublons (location, date) en une seule ligne, en conservant Pour chaque colonne, la valeur non manquante (non-NA) si elle existe. Si les deux valeurs sont NA, le NA est conservé
+
+``` r
+fusionnes <- doublons %>%
+  group_by(location, date) %>%
+  summarise(across(everything(), ~ first(na.omit(.))), .groups = "drop")
+```
+
+### - Suppression des doublons après fusion
+#### Suppression des anciennes lignes doublées du jeu de données initial + Ajout des lignes fusionnées à leur place
+
+``` r
+CovidData_sans_doublons <- CovidData_clean %>%
+  filter(!(paste(location, date) %in% paste(doublons$location, doublons$date)))
+
+CovidData_clean <- bind_rows(CovidData_sans_doublons, fusionnes) %>%
+  arrange(location, date)
+
+#CovidData_clean
+```
+
+## 4. ReVérification des donees et Chargement dans CovidData_Prepared (variable avec laquelle on va travailler tout le long)
+
+``` r
+#str(CovidData_clean)
+#summary(CovidData_clean)
+CovidData_Prepared <- CovidData_clean
+```
+
+## 5. Ajout d'une colonne type_location qui indique selon une location si c'est un Pays, un Continent, un territoires ou dépendances, une aggregation -- Total location = 255
+
+
+``` r
+ListeLocation <- CovidData_Prepared %>% select(location) %>% distinct()
+#ListeLocation
+```
+
+
+``` r
+continents <- c("Africa", "Asia", "Europe", "North America",
+    "South America", "Oceania")
+```
+
+
+``` r
+regions_agregats <- c(
+    "World", "European Union (27)", 
+    "High-income countries", "Low-income countries",
+    "Lower-middle-income countries", "Upper-middle-income countries"
+  )
+```
+
+
+``` r
+territory_or_dependency <- c(
+      "England", "Scotland", "Wales", "Northern Ireland", "Puerto Rico", 
+      "Hong Kong", "Macao", "Greenland", "Guadeloupe", "Martinique", 
+      "French Guiana", "French Polynesia", "Reunion", "Mayotte", "New Caledonia", 
+      "Aruba", "Curacao", "Bonaire Sint Eustatius and Saba", "Gibraltar", 
+      "Guernsey", "Jersey", "Isle of Man", "Faroe Islands", "Falkland Islands", 
+      "Saint Martin (French part)", "Sint Maarten (Dutch part)", "Saint Barthelemy", 
+      "Saint Pierre and Miquelon", "Cayman Islands", "Bermuda", "British Virgin Islands", 
+      "United States Virgin Islands", "Turks and Caicos Islands", "Anguilla", 
+      "Montserrat", "Cook Islands", "Tokelau", "Niue", "Pitcairn", "Western Sahara", 
+      "Palestine", "Kosovo", "Northern Cyprus", "Taiwan", "Vatican", 
+      "Micronesia (country)")
+```
+
+
+``` r
+CovidData_Prepared <- CovidData_Prepared %>%
+  mutate(type_location = case_when(
+    location %in% continents ~ "continent",
+    location %in% regions_agregats ~ "region_or_aggregate",
+    location %in% territory_or_dependency ~ "territory_or_dependency",
+    .default = "country"
+  ))
+#CovidData_Prepared
+```
+
+
+``` r
+#CovidData_Prepared %>% select(location, type_location) %>% distinct()
+```
+
+
+``` r
+#CovidData_Prepared %>% filter(location == 'France') %>% select(location, date, new_cases, new_cases_smoothed)
+```
+
+
+# II/ Analyses des données
+
+### 1. Nombre total de cas COVID-19 par pays sur la carte
+
+``` r
+summary_world <- CovidData_Prepared %>%
+  filter(type_location %in% c("country", "territory_or_dependency")) %>%
+  group_by(iso_code) %>%
+  summarize(
+    total_cases = max(total_cases, na.rm = TRUE),
+    total_deaths = max(total_deaths, na.rm = TRUE)
+  )
+
+# chargergement de la géographie du monde, utilisation du package "rnaturalearth"
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Fusion avec les données COVID
+world_merged <- world %>%
+  left_join(summary_world, by = c("iso_a3" = "iso_code")) %>%
+  mutate(
+    total_cases = ifelse(is.na(total_cases), 0, total_cases),
+    total_deaths = ifelse(is.na(total_deaths), 0, total_deaths)
+  )
+
+# creation du graphe ggplot
+p <- ggplot(data = world_merged) +
+  geom_sf(aes(
+    fill = total_cases,
+    text = paste(
+      name,
+      "<br>Cas totaux :", formatC(total_cases, format = "d", big.mark = " "),
+      "<br>Décès totaux :", formatC(total_deaths, format = "d", big.mark = " ")
+    )
+  ),
+  color = "white", size = 0.2
+  ) +
+  scale_fill_viridis_c(
+    option = "plasma",
+    trans = "log10",  
+    na.value = "grey90",
+    labels = scales::label_number(
+      accuracy = 1,
+      big.mark = " ",
+      scale_cut = scales::cut_short_scale()
+    )
+  ) +
+  labs(
+    title = "Répartition mondiale des cas totaux de COVID-19",
+    fill = "Nombre de cas cumulés"
+  ) +
+  theme_minimal()
+
+# Généreratio de la version interactive
+interactive_map <- ggplotly(p, tooltip = "text")
+
+# Affichage dans un navigateur
+temp_file <- tempfile(fileext = ".html")
+saveWidget(interactive_map, temp_file)
+browseURL(temp_file)
+
+p
+```
+
+![](Covid19_Analysis_And_Visualization_files/figure-latex/unnamed-chunk-19-1.pdf)<!-- --> 
+
+#### Interpretention : 
+  **Le Graphe**  
+Ce graphique montre la répartition mondiale des cas cumulés de COVID-19, avec un code couleur allant du violet (peu de cas) au jaune vif (très grand nombre de cas, jusqu'à 100 millions).
+
+- **En jaune** : les pays ayant enregistré le plus grand nombre de cas cumulés (ex : États-Unis, Inde, Brésil, France).
+- **En orange/rouge** : pays avec plusieurs millions de cas (ex : Canada, Espagne, Afrique du Sud, Russie).
+- **En violet foncé** : pays ayant relativement peu de cas déclarés (ex : beaucoup de pays d’Afrique centrale, quelques pays d’Asie du Sud-Est).
+
+  **Interprétation concrète**  
+Les pays les plus industrialisés et les plus peuplés présentent souvent les nombres de cas les plus élevés, mais disposent également d’une capacité de dépistage plus importante.
+
+L’Afrique apparaît majoritairement en violet ou rouge foncé : cela peut traduire un nombre réel de cas plus faible, ou un sous-dépistage (moins de tests, moins de données disponibles).
+
+Certains pays, comme la Chine ou la Corée du Nord, peuvent sembler moins touchés, mais cela peut aussi résulter des politiques de déclaration ou d’un manque de transparence dans les données.
+
+Le graphique ne reflète pas uniquement la gravité de la situation sanitaire, mais aussi les capacités de test, les politiques de santé publique et la démographie. Il permet de visualiser rapidement les zones les plus touchées en nombre absolu.
+
+
+### 2. Évolution Mondiale des Cas et des Décès de COVID-19 
+
+``` r
+world_long <- CovidData_Prepared %>%
+  filter(location == "World") %>%
+  select(date, new_cases_smoothed, new_deaths_smoothed) %>%
+  pivot_longer(cols = c(new_cases_smoothed, new_deaths_smoothed),
+               names_to = "type", values_to = "valeur") %>%
+  mutate(
+    type = recode(type,
+                  new_cases_smoothed = "Nouveaux cas par jour (jours lissé sur 7 jours)",
+                  new_deaths_smoothed = "Nouveaux décès par jour (jours lissé sur 7 jours)")
+  )
+
+a <- ggplot(world_long, aes(x = date, y = valeur)) +
+  geom_line(aes(color = type), size = 0.2) +
+  facet_wrap(~type, ncol = 1, scales = "free_y") +
+  
+  # AXE X 
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%d %b %Y",
+    date_minor_breaks = "1 month"
+  ) +
+  
+  # AXE Y 
+  scale_y_continuous(
+    labels = comma,
+    minor_breaks = waiver()
+  ) +
+  
+  scale_color_manual(values = c(
+    "Nouveaux cas par jour (jours lissé sur 7 jours)" = "steelblue",
+    "Nouveaux décès par jour (jours lissé sur 7 jours)" = "firebrick"
+  )) +
+  
+  labs(
+    title = "Évolution Mondiale des Cas et des Décès de COVID-19 du 05/01/2020 au 04/08/2024 (Total de Cas : 775 866 783    -  Total de morts : 7 057 132)",
+    subtitle = "",
+    x = "Jours",
+    y = "Nombre de Personne",
+    caption = "Source : Our World in Data"
+  ) +
+  
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 10),
+    plot.subtitle = element_text(size = 8),
+    
+    # AXES
+    axis.title.x = element_text(face = "bold", size = 10),
+    axis.title.y = element_text(face = "bold", size = 10),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
+    axis.text.y = element_text(size = 9),
+    
+    # GRILLE PRINCIPALE
+    panel.grid.major = element_line(color = "grey80", size = 0.3),
+    
+    # GRILLE SECONDAIRE 
+    panel.grid.minor = element_line(color = "grey90", size = 0.1),
+    
+    # FACETTES
+    strip.background = element_rect(fill = "grey95", color = "grey80"),
+    strip.text = element_text(face = "bold", size = 10),
+    
+    # BORDURE
+    panel.border = element_rect(color = "grey60", fill = NA, size = 0.5),
+    
+    # LÉGENDE
+    legend.position = "bottom",
+    legend.title = element_blank(),
+    legend.text = element_text(size = 10)
+  )
+```
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## i Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
+## Warning: The `size` argument of `element_rect()` is deprecated as of ggplot2 3.4.0.
+## i Please use the `linewidth` argument instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
+## Warning: The `size` argument of `element_line()` is deprecated as of ggplot2 3.4.0.
+## i Please use the `linewidth` argument instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+``` r
+# graphique interactif
+interactive_plot <- ggplotly(a)
+
+# Sauvegarde dans un fichier temporaire
+temp_file <- tempfile(fileext = ".html")
+saveWidget(interactive_plot, temp_file)
+
+# Ouvre dans le navigateur
+browseURL(temp_file)
+
+# Affichage
+
+a
+```
+
+```
+## Warning: Removed 30 rows containing missing values or values outside the scale range
+## (`geom_line()`).
+```
+
+![](Covid19_Analysis_And_Visualization_files/figure-latex/unnamed-chunk-20-1.pdf)<!-- --> 
+
+
+## Analyse comparative de l'evolution de la Covid 19 dans les 5 pays d'Europe les plus impactés
+
+### récupérerer les 5 pays d'europe les plus touchées par le covid-19 en se basant sur le nombre total de cas enregister pour chaque pays
+
+
+``` r
+# la liste des 5 pays les plus touchés et leurs totals de cas  
+
+top5EuropeanContaminedCountries <-CovidData_Prepared %>%
+  filter(type_location %in% c("country","territory_or_dependency"), continent =="Europe") %>%
+  group_by(location) %>%
+  summarize(max_cases = max(total_cases, na.rm = TRUE)) %>% arrange((desc(max_cases)))%>% slice(1:5)
+```
+
+```
+## Warning: There were 4 warnings in `summarize()`.
+## The first warning was:
+## i In argument: `max_cases = max(total_cases, na.rm = TRUE)`.
+## i In group 12: `location = England`.
+## Caused by warning in `max()`:
+## ! aucun argument pour max ; -Inf est renvoyé
+## i Run `dplyr::last_dplyr_warnings()` to see the 3 remaining warnings.
+```
+
+``` r
+#top5EuropeanContaminedCountries
+
+# filtre de la dataset sur ces 5 pays
+
+top_5_countriesName<-top5EuropeanContaminedCountries$location
+
+data_top5_contamined_countries <-CovidData_Prepared %>%
+  filter(location %in% top_5_countriesName)
+#data_top5_contamined_countries
+```
+
+
+### 3. Le graphe représentant nombre moyen par jour de nouveaux cas enregisté pour les 5 pays les plus touchés d'Europe
+
+
+``` r
+library(plotly)
+library(dplyr)
+
+# Liste des pays top 5
+top5 <- unique(data_top5_contamined_countries$location)
+
+# Figure vide
+fig <- plot_ly()
+
+# Ajouter les lignes pays par pays
+for (i in seq_along(top5)) {
+  pays <- top5[i]
+  visible <- ifelse(pays == "France", TRUE, "legendonly")
+  
+  fig <- fig %>%
+    add_lines(
+      data = filter(data_top5_contamined_countries, location == pays),
+      x = ~date,
+      y = ~new_cases_smoothed,
+      name = pays,
+      visible = visible,
+      line = list(width = 1)
+    )
+}
+
+# Mise en page
+fig <- fig %>%
+  layout(
+    title = list(
+      text = "Nombre moyen par jour de nouveaux cas enregistrés pour les 5 pays les plus touchés d'Europe",
+      x = 0.5
+    ),
+    xaxis = list(
+      title = "Date",
+      tickformat = "%d %b %Y",
+      dtick = "M3",
+      tickangle = 45,
+      showgrid = TRUE,
+      gridcolor = "gray80",
+      minor = list(
+        dtick = "M1",
+        showgrid = TRUE,
+        gridcolor = "gray90"
+      )
+    ),
+    yaxis = list(
+      title = "Nombre moyen par jour de nouveaux cas",
+      tickformat = ",",
+      showgrid = TRUE,
+      gridcolor = "gray80"
+    ),
+    legend = list(orientation = "h", x = 0.1, y = -0.2)
+  )
+
+# Sauvegarde temporaire
+temp_file <- tempfile(fileext = ".html")
+saveWidget(fig, temp_file)
+browseURL(temp_file)
+```
+
+#### Évolution de la pandémie dans cinq pays européens
+
+Nous observons l’évolution de la pandémie pour chacun des cinq pays, indépendamment les uns des autres.
+
+Les cinq pays d’Europe les plus touchés par la pandémie sont :
+- **France** : 20 % du taux de contamination en Europe
+- **Allemagne** : 19 %
+- **Italie** : 13 %
+- **Royaume-Uni** : 12 %
+- **Russie** : 10 %
+
+Le taux global de contamination dans ces pays représente environ **72 %** de l’ensemble des cas détectés en Europe.
+
+---
+
+- Analyse par pays
+
+- • France
+En début 2020, on observe une tendance moyennement importante du nombre de cas détectés, qui prend une proportion non négligeable en octobre 2020. Cette tendance reste constante jusqu’à octobre 2021 où l’on observe une croissance rapide du nombre de cas.
+
+Le nombre de nouveaux cas quotidiens a atteint son pic fin 2021 et début 2022, frôlant les **350 000 cas par jour**, dépassant largement les vagues précédentes. Durant le deuxième trimestre de l’année 2022, une chute importante du nombre de cas est observée. Depuis, la situation s’améliore progressivement, bien qu'on note encore quelques petites vagues entre la fin du deuxième trimestre 2022 et 2023. À la fin de 2023, le nombre de cas s’est stabilisé à un niveau assez bas, jusqu’à devenir **négligeable début 2024**.
+
+- • Allemagne
+L’Allemagne a également connu une forte vague début 2022, avec un pic autour de **200 000 cas par jour**. Par la suite, plusieurs vagues, moins importantes, se sont succédé. La courbe des contaminations est restée fluctuante, mais la **tendance générale est à la baisse à partir de 2023**.
+
+- • Italie
+En début 2020, une tendance modérément importante du nombre de cas détectés est observée, qui augmente significativement en octobre 2020. Cette tendance reste stable jusqu’à octobre 2021, moment où la croissance des cas s’accélère.
+
+Ce schéma ressemble à celui de la France, avec un pic important début 2022, atteignant près de **180 000 cas quotidiens**. Entre 2020 et 2023, plusieurs vagues se sont succédé, atteignant **100 000 cas entre juin et août 2022**, mais leur intensité a diminué avec le temps, montrant un **meilleur contrôle de la situation**.
+
+- • Royaume-Uni
+Un pic très élevé a été enregistré début 2022, avec près de **200 000 cas quotidiens**. Ensuite, les cas chutent rapidement, avec seulement quelques petites vagues par la suite. Dès 2023, la courbe diminue fortement et les nouveaux cas deviennent **quasiment inexistants en 2024**, signe d’une sortie progressive de la crise.
+
+- • Russie
+Les pics épidémiques sont plus étalés et **moins élevés** qu’en France ou en Allemagne. Le pic le plus marqué atteint environ **150 000 cas par jour**. Après la mi-2023, la courbe devient presque plate, ce qui pourrait s’expliquer par une **baisse réelle de la circulation du virus** ou une **modification dans la manière de tester et de rapporter les cas**.
+
+
+
+### 4. Le graphe représentant nombre moyen par jour de nouveaux décés enregisté pour les 5 pays les plus touchés d'Europe
+
+
+``` r
+library(ggplot2)
+library(dplyr)
+library(patchwork) 
+```
+
+```
+## Warning: le package 'patchwork' a été compilé avec la version R 4.3.3
+```
+
+``` r
+# Graphique de l'évolutions moyen par jour des nouveaux décés confirmés pour les 5 pays Europe les plus touchés
+
+p1 <- ggplot(data_top5_contamined_countries, aes(x = date, y = new_deaths_smoothed, color = location)) +
+  geom_line(size = 0.4) +
+  
+  # AXES
+  scale_x_date(
+    date_breaks = "3 months",
+    date_labels = "%d %b %Y",
+    date_minor_breaks = "1 month"
+  ) +
+  scale_y_continuous(
+    labels = scales::comma
+  ) +
+  
+  # TITRES ET LIBELLÉS
+  labs(
+    title = "Nombre moyens par jour de nouveaux décés enregisté pour les 5  pays les plus touchés d'Europe sur toute la période",
+    x = "Date",
+    y = "Nombre moyen par jour de nouveaux de décés"
+  ) +
+  
+  # THÈME GÉNÉRAL
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    axis.title = element_text(size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+    axis.text.y = element_text(size = 10),
+    
+    # GRILLE
+    panel.grid.major = element_line(color = "gray80", size = 0.3),
+    panel.grid.minor = element_line(color = "gray90", size = 0.2, linetype = "dotted"),
+    
+    # LÉGENDE
+    legend.position = "bottom"
+  )
+
+
+
+
+# Crée le graphique interactif
+interactive_plot <- ggplotly(p1)
+
+# Sauvegarde dans un fichier temporaire
+temp_file <- tempfile(fileext = ".html")
+saveWidget(interactive_plot, temp_file)
+
+# Ouvre dans le navigateur
+browseURL(temp_file)
+```
+
+#### Interpretation
+🇫🇷 **France**  
+En France, trois grandes vagues de décès se distinguent. La première a lieu entre mi-avril et mi-mai, avec un pic proche de 500 morts par jour. La deuxième, survenue à la fin de l’année 2020, est la plus importante, atteignant environ 800 décès quotidiens. La troisième, début 2022, avoisine les 300 morts par jour, malgré une nette baisse observée les mois précédents. Par la suite, chaque nouvelle vague de COVID-19 entraîne une hausse de mortalité moins marquée.
+
+🇩🇪 **Allemagne**  
+L’évolution en Allemagne est similaire à celle observée en France, avec un pic notable fin décembre 2021, autour de 900 décès par jour. Les vagues suivantes sont plus fréquentes mais moins intenses, avec une mortalité qui s’étale davantage dans le temps. À partir de la mi-2022, les augmentations deviennent moins fortes, bien que la courbe reste plus irrégulière et prolongée que dans d’autres pays.
+
+🇮🇹 **Italie**  
+L’Italie est l’un des premiers pays touchés, avec une première vague particulièrement meurtrière dès mars-avril 2020, atteignant près de 800 morts par jour. Une nouvelle vague significative apparaît en décembre 2020. Ensuite, la mortalité diminue, même si les vagues continuent de se succéder.
+
+🇷🇺 **Russie**  
+La Russie se distingue par des pics de mortalité très élevés et plus durables que dans les autres pays. Le pic maximal est enregistré en novembre 2021, avec plus de 1 200 morts par jour. Contrairement à l’Europe de l’Ouest, la Russie reste confrontée à une mortalité élevée sur une période prolongée.
+
+🇬🇧 **Royaume-Uni**  
+Le Royaume-Uni connaît deux pics majeurs de décès : le premier en janvier 2021, avec près de 1 400 morts par jour — un record parmi les cinq pays analysés —, et le second fin avril 2020, avec environ 1 200 décès quotidiens. Après ces vagues, la mortalité chute rapidement. Même lors des vagues de contaminations en 2022, le nombre de décès reste relativement faible.
+
+**Synthèse comparative**  
+La comparaison entre les cinq pays montre que la mortalité liée à la COVID-19 a culminé entre fin 2020 et début 2021, avant la généralisation des campagnes de vaccination. Le Royaume-Uni et la Russie présentent des pics particulièrement élevés, tandis que l’Italie se distingue par une première vague très précoce dès mars 2020. À partir de 2022, la tendance générale est à la baisse de la mortalité dans tous les pays.
+
+### 5. Evolution des personnes ayant reçu au moins une dose de vaccin
+
+``` r
+# Filtrer les colonnes utiles
+donnees_vaccins <- CovidData_Prepared %>%
+  filter(location %in% top_5_countriesName) %>%
+  select(date, pays = location, personnes_vaccinees = people_vaccinated) %>%
+  filter(!is.na(personnes_vaccinees)) %>%
+  mutate(date = as.Date(date))
+
+# Tracer le graphique avec ggplot2
+gg1<- ggplot(donnees_vaccins, aes(x = date, y = personnes_vaccinees, color = pays)) +
+  geom_line(linewidth = 0.5) +
+  labs(
+    title = "Évolution du nombre de personnes vaccinées contre la COVID-19",
+    x = "Date",
+    y = "Cumul des Personnes Vaccinées",
+    color = "Pays"
+  ) +
+  scale_y_continuous(labels = scales::comma) +
+  theme_minimal()
+gg1
+```
+
+![](Covid19_Analysis_And_Visualization_files/figure-latex/unnamed-chunk-24-1.pdf)<!-- --> 
+
+#### Interpretation
+
+Les estimations de la population que nous utilisons pour calculer les paramètres de mesure par habitant sont fondées sur la dernière révision des **Perspectives démographiques mondiales** des Nations Unies.
+
+La vaccination a été réalisée dans tous les pays, impactés ou non par la pandémie, et est devenue une obligation nécessaire pour les conditions de déplacement d’un pays à un autre sur la période de **2020 à 2024**.
+
+L’objectif de cette étude est d’analyser la variation des doses administrées et la masse de population ayant reçu au moins une dose de vaccin, ainsi que l’impact que ces mesures ont eu sur la propagation de la COVID-19.  
+**Est-elle un facteur d’évolution ou un frein ?**
+
+Pour cela, nous allons observer le graphe d’évolution du taux d’injection en parallèle du graphe d’évolution de la pandémie.
+
+- **1,3 milliard** de doses ont été administrées en Europe de **2021 à 2024**.
+
+Sur le graphe d’évolution du nombre de personnes ayant reçu au moins une dose de vaccin, nous observons une croissance négligeable de personnes vaccinées début 2021. Cette tendance devient progressivement importante vers la fin du premier semestre 2021, pour atteindre un pic moyen au début du premier trimestre 2022.
+
+Après cette période, elle est restée constante pour la **France, l’Allemagne, l’Italie** et le **Royaume-Uni**.  
+Le nombre de personnes vaccinées en **Russie** a évolué jusqu’au début du premier trimestre 2023, puis est resté constant jusqu’en 2024.
+
+### 6. Observation de l'Évolution des cas et de l'indice de rigueur selons les 5 pays europeennes les plus touchés
+
+``` r
+pays <- unique(data_top5_contamined_countries$location)
+
+# Créer une figure vide
+fig <- plot_ly()
+
+# Ajouter une courbe pour chaque pays, avec visibilité contrôlée
+for (i in seq_along(pays)) {
+  p <- pays[i]
+  df_p <- data_top5_contamined_countries %>% filter(location == p)
+  
+  # Visibilité : uniquement France visible par défaut
+  visible_flag <- if (p == "France") TRUE else FALSE
+  
+  fig <- fig %>%
+    add_lines(data = df_p, x = ~date, y = ~new_cases_smoothed,
+              name = "Nouveaux cas", yaxis = "y1", visible = visible_flag) %>%
+    add_lines(data = df_p, x = ~date, y = ~stringency_index,
+              name = "Indice de rigueur", yaxis = "y2", visible = visible_flag)
+}
+
+# Création du menu déroulant
+buttons <- lapply(seq_along(pays), function(i) {
+  n <- length(pays)
+  visibles <- rep(FALSE, n * 2)
+  visibles[(2 * i - 1):(2 * i)] <- TRUE
+  
+  list(
+    method = "restyle",
+    args = list("visible", visibles),
+    label = pays[i]
+  )
+})
+
+# Finalisation du graphique
+fig <- fig %>%
+  layout(
+    title = "Évolution des cas et de l'indice de rigueur",
+    
+    xaxis = list(
+      title = "Date",
+      tickformat = "%d %b %Y",        # Format mois année
+      dtick = "M3",                # Tick principal tous les 3 mois
+      tick0 = min(data_top5_contamined_countries$date),# Point de départ
+      showgrid = TRUE,
+      gridcolor = "lightgrey",     # Ligne principale
+      minor = list(
+        ticks = "inside",
+        dtick = "M1",              # Tick secondaire tous les mois
+        showgrid = TRUE,
+        gridcolor = "gainsboro",   # Ligne secondaire plus fine
+        ticklen = 2
+      )
+    ),
+    
+    yaxis = list(
+      title = "Nouveaux cas (lissés)",
+      showgrid = TRUE,
+      gridcolor = "lightgrey",
+      zeroline = FALSE,
+      minor = list(
+        showgrid = TRUE,
+        gridcolor = "gainsboro"
+      )
+    ),
+    
+    yaxis2 = list(
+      overlaying = "y",
+      side = "right",
+      title = "Indice de rigueur (rescalé)",
+      showgrid = FALSE
+    ),
+    
+    updatemenus = list(list(
+      active = which(pays == "France") - 1,
+      buttons = buttons,
+      direction = "down",
+      x = 1.1,
+      y = 1
+    )),
+    
+    legend = list(x = 0.1, y = -0.2, orientation = "h")
+  )
+
+# Crée le graphique interactif
+interactive_plot <- fig
+
+# Sauvegarde dans un fichier temporaire
+temp_file <- tempfile(fileext = ".html")
+saveWidget(as_widget(interactive_plot), temp_file)
+
+# Ouvre dans le navigateur
+browseURL(temp_file)
+```
+
+#### Interpretation :
+On constate que la gestion de la pandémie de COVID-19 et l’application des mesures sanitaires ont différé selon les pays européens étudiés. La France, l’Italie, l’Allemagne et le Royaume-Uni ont tous réagi de façon marquée lors des pics de contamination, en adoptant des restrictions très strictes, avec des indices de rigueur pouvant atteindre 88 au Royaume-Uni, surtout durant les années 2020 et 2021. À l’opposé, la Russie a adopté une attitude plus souple, son indice de rigueur dépassant rarement 60, même lors de vagues importantes, comme au début de 2022. En Russie, il est aussi fréquent de voir les restrictions maintenues à un niveau modéré pendant les pics, puis rapidement assouplies, parfois avant même que la situation ne s’améliore réellement. De manière générale, à partir de la mi-2022, tous ces pays ont progressivement levé les mesures, malgré quelques hausses du nombre de cas, ce qui reflète un changement de stratégie reposant davantage sur la vaccination, la gestion des hôpitaux et l’acceptation par la population. Cette analyse montre donc que chaque pays a adopté une approche différente pour faire face à la pandémie, malgré un contexte mondial similaire.
+
+### Analyse comparative
+Le suivi de l’évolution de la COVID-19 dans les cinq pays européens les plus touchés – France, Allemagne, Italie, Russie et Royaume-Uni – montre des dynamiques variées en termes de nombre de cas et de mortalité, influencées par la progression des campagnes de vaccination. En début de pandémie, chacun de ces pays a enregistré des pics importants de contamination, avec des tendances similaires jusqu’à fin 2021, où la France et l’Italie affichent des hausses rapides, culminant respectivement à environ 350 000 et 180 000 cas quotidiens début 2022, tandis que l’Allemagne et le Royaume-Uni connaissent des pics proches de 200 000 cas par jour. La Russie, quant à elle, présente des pics plus étalés et moins élevés, avec un maximum autour de 150 000 cas par jour. Ces variations s’expliquent notamment par des différences dans la gestion de la crise et les capacités de dépistage.
+
+Avec le déploiement massif de la vaccination dès 2021, une stabilisation puis une baisse des nouveaux cas s’observent progressivement dans la majorité des pays étudiés. En France, Allemagne, Italie et Royaume-Uni, la couverture vaccinale atteint un plateau début 2022, période à partir de laquelle la courbe des contaminations amorce une diminution notable, signe d’une efficacité du vaccin à freiner la transmission. La Russie diffère légèrement, avec une montée de la vaccination plus tardive, jusqu’au début de 2023, ce qui coïncide avec une baisse plus tardive des cas. La vaccination semble donc avoir joué un rôle clé non seulement en limitant le nombre d’infections, mais aussi en atténuant l’intensité des vagues successives.
+
+Cette tendance se retrouve dans l’évolution de la mortalité. Les cinq pays ont connu des vagues majeures de décès entre fin 2020 et début 2021, avant la généralisation de la vaccination, avec des pics dépassant parfois les 1 000 morts par jour, notamment en Russie et au Royaume-Uni où les chiffres sont particulièrement élevés. La France et l’Italie ont suivi des trajectoires proches, marquées par une forte mortalité au début de la crise puis une diminution progressive des décès. L’Allemagne se distingue par des pics moins intenses mais plus prolongés dans le temps, certains s’étalant jusqu’en 2023. En Russie, la mortalité élevée persiste plus longtemps, reflétant une gestion plus complexe de la pandémie. Le Royaume-Uni a connu les plus hauts sommets, avec près de 1 400 décès quotidiens en janvier 2021, avant d’observer une chute rapide de la mortalité à partir de 2022. Globalement, la baisse significative des décès dans tous ces pays à partir de 2022 correspond à l’augmentation de la couverture vaccinale, ainsi qu’à l’adoption de mesures sanitaires adaptées.
+
+Ainsi, l’analyse conjointe des cas et des décès met en lumière l’effet positif des campagnes de vaccination sur le contrôle de la pandémie. Alors que les vagues de contamination ont pu être fortes et fréquentes jusqu’au début de 2022, la vaccination a permis de limiter la gravité des cas, conduisant à une réduction progressive et durable du nombre de morts, même si la dynamique exacte varie selon le contexte national et la stratégie sanitaire de chaque pays.
+
+##

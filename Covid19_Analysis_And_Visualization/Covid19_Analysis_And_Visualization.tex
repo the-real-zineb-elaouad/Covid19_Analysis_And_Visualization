@@ -1,0 +1,587 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  11pt,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{tocloft}
+\renewcommand{\cftdotsep}{1.5}
+\renewcommand{\cftsecfont}{\normalfont}
+\renewcommand{\cftsecpagefont}{\normalfont}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={COVID-19 - Analyse et Visualisation},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{\emph{COVID-19 - Analyse et Visualisation}}
+\author{\emph{Réalisé par :}\\
+EL AOUAD Zineb\\
+DIALLO Mamadou Aliou\\
+DIALLO Sadou\\
+DOSSO Siaka\\
+EL HIRI Salah Eddine}
+\date{20 mai 2025}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+Notre étude porte sur l'analyse comparative de l'évolution de la
+COVID-19 des pays d'Europe les plus impactés, que sont la
+\textbf{France}, l'\textbf{Allemagne}, le \textbf{Royaume-Uni},
+l'\textbf{Italie} et la \textbf{Russie}.\\
+L'observation est faite sur la période de \textbf{2020 à 2024}.
+
+Dans le contexte de notre étude, nous avons procédé par \textbf{phases}
+:
+
+\begin{itemize}
+\tightlist
+\item
+  La première phase a consisté au \textbf{traitement des données}.\\
+\item
+  La dernière phase a concerné \textbf{l'analyse}.
+\end{itemize}
+
+\hypertarget{muxe9thodologie}{%
+\subsection{Méthodologie}\label{muxe9thodologie}}
+
+L'analyse des données a mis en évidence : - l'\textbf{observation
+globale} de l'évolution de la COVID-19 dans les pays du monde, - une
+\textbf{proportionnalité par rapport au nombre d'habitants}, - puis une
+\textbf{observation concentrée sur les cinq pays d'Europe} sélectionnés.
+
+Pour mener à bien notre étude, nous avons divisé la tâche de travail en
+différents \textbf{niveaux d'analyse} :
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Une analyse d'évolution temporelle} portant sur l'évolution du
+  nombre de cas de COVID détectés.
+\item
+  \textbf{Une analyse comparative} permettant de mettre en évidence :
+
+  \begin{itemize}
+  \tightlist
+  \item
+    la différence du nombre de cas détectés entre les pays,
+  \item
+    le \textbf{taux linéaire} d'évolution.
+  \end{itemize}
+\item
+  \textbf{Des indices d'indicateurs} pour illustrer l'impact des
+  \textbf{mesures anti-COVID-19} sur l'évolution du virus, en
+  corrélation avec le \textbf{niveau de rigueur} propre à chaque pays.
+\item
+  \textbf{Une analyse post-COVID-19}.
+\end{itemize}
+
+\hypertarget{source-des-donnuxe9es}{%
+\subsection{Source des données}\label{source-des-donnuxe9es}}
+
+Les données utilisées proviennent du dépôt GitHub de \emph{Our World In
+Data}, accessible à l'adresse suivante :\\
+\url{https://github.com/owid/covid-19-data/tree/master/public/data}\strut \\
+Le fichier README de ce dépôt fournit des précisions sur les sources et
+la structure des données.
+
+\hypertarget{sources-dinformation}{%
+\subsection{Sources d'information}\label{sources-dinformation}}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Our World In Data} :
+  \url{https://ourworldindata.org/coronavirus}\\
+\item
+  L'article dédié aux cas de COVID-19 :
+  \url{https://ourworldindata.org/covid-cases} d'OWID
+\item
+  \textbf{Google} : utilisé pour la vérification des données et des
+  tendances réelles, en complément de nos résultats\\
+\item
+  \textbf{ChatGPT} : pour la validation des informations ainsi que pour
+  la résolution d'erreurs et de bugs dans le code, proposition de graphe
+  adapté à une étude
+\end{itemize}
+
+\hypertarget{packages-uxe0-installer-uxe0-duxe9commenter-au-besoins}{%
+\subsection{Packages à installer (à décommenter au besoins)
+:}\label{packages-uxe0-installer-uxe0-duxe9commenter-au-besoins}}
+
+\hypertarget{chargement-exploration-pruxe9paration-et-nettoyage-des-donnuxe9es}{%
+\section{Chargement, Exploration, Préparation et nettoyage des
+données}\label{chargement-exploration-pruxe9paration-et-nettoyage-des-donnuxe9es}}
+
+\hypertarget{chargement}{%
+\subsection{Chargement}\label{chargement}}
+
+\hypertarget{vuxe9rification-et-convertions-des-types-de-variables}{%
+\subsection{Vérification et convertions des types de
+variables}\label{vuxe9rification-et-convertions-des-types-de-variables}}
+
+\hypertarget{conversion-de-la-date-et-des-variables-catuxe9gorielles}{%
+\subsubsection{Conversion de la date et des variables
+catégorielles}\label{conversion-de-la-date-et-des-variables-catuxe9gorielles}}
+
+\hypertarget{suppression-des-colonnes-avec-plus-de-90-de-valeurs-manquantes}{%
+\subsection{Suppression des colonnes avec plus de 90 \% de valeurs
+manquantes}\label{suppression-des-colonnes-avec-plus-de-90-de-valeurs-manquantes}}
+
+toutes les colonnes contenant plus de 90\% de valeurs manquantes (NA)
+ont été retirées. Leurs noms sont conservés dans une variable
+colonnes\_supprimees à des fins de traçabilité.
+
+\hypertarget{colonnes-supprimuxe9s}{%
+\subsubsection{Colonnes Supprimés :}\label{colonnes-supprimuxe9s}}
+
+\begin{verbatim}
+##  [1] "icu_patients"                           
+##  [2] "icu_patients_per_million"               
+##  [3] "hosp_patients"                          
+##  [4] "hosp_patients_per_million"              
+##  [5] "weekly_icu_admissions"                  
+##  [6] "weekly_icu_admissions_per_million"      
+##  [7] "weekly_hosp_admissions"                 
+##  [8] "weekly_hosp_admissions_per_million"     
+##  [9] "excess_mortality_cumulative_absolute"   
+## [10] "excess_mortality_cumulative"            
+## [11] "excess_mortality"                       
+## [12] "excess_mortality_cumulative_per_million"
+\end{verbatim}
+
+\hypertarget{duxe9tection-traitement-et-suppression-des-doublons}{%
+\subsection{Détection, traitement et suppression des
+doublons}\label{duxe9tection-traitement-et-suppression-des-doublons}}
+
+\hypertarget{detectetion}{%
+\subsubsection{- Detectetion}\label{detectetion}}
+
+\hypertarget{nous-avons-duxe9tectuxe9-7-770-doublons-sur-la-combinaison-location-date.-ces-doublons-nuxe9taient-pas-de-simples-ruxe9puxe9titions-mais-souvent-deux-lignes-contenant-des-donnuxe9es-partielles.-cest-des-donnees-fragmentees}{%
+\paragraph{Nous avons détecté 7 770 doublons sur la combinaison location
++ date. Ces doublons n'étaient pas de simples répétitions, mais souvent
+deux lignes contenant des données partielles. C'EST DES DONNEES
+FRAGMENTEES}\label{nous-avons-duxe9tectuxe9-7-770-doublons-sur-la-combinaison-location-date.-ces-doublons-nuxe9taient-pas-de-simples-ruxe9puxe9titions-mais-souvent-deux-lignes-contenant-des-donnuxe9es-partielles.-cest-des-donnees-fragmentees}}
+
+\hypertarget{traitement-des-doublons}{%
+\subsubsection{Traitement des doublons}\label{traitement-des-doublons}}
+
+\hypertarget{on-a-fusionnuxe9-chaque-groupe-de-doublons-location-date-en-une-seule-ligne-en-conservant-pour-chaque-colonne-la-valeur-non-manquante-non-na-si-elle-existe.-si-les-deux-valeurs-sont-na-le-na-est-conservuxe9}{%
+\paragraph{On a fusionné chaque groupe de doublons (location, date) en
+une seule ligne, en conservant Pour chaque colonne, la valeur non
+manquante (non-NA) si elle existe. Si les deux valeurs sont NA, le NA
+est
+conservé}\label{on-a-fusionnuxe9-chaque-groupe-de-doublons-location-date-en-une-seule-ligne-en-conservant-pour-chaque-colonne-la-valeur-non-manquante-non-na-si-elle-existe.-si-les-deux-valeurs-sont-na-le-na-est-conservuxe9}}
+
+\hypertarget{suppression-des-doublons-apruxe8s-fusion}{%
+\subsubsection{Suppression des doublons après
+fusion}\label{suppression-des-doublons-apruxe8s-fusion}}
+
+\hypertarget{suppression-des-anciennes-lignes-doubluxe9es-du-jeu-de-donnuxe9es-initial-ajout-des-lignes-fusionnuxe9es-uxe0-leur-place}{%
+\paragraph{Suppression des anciennes lignes doublées du jeu de données
+initial + Ajout des lignes fusionnées à leur
+place}\label{suppression-des-anciennes-lignes-doubluxe9es-du-jeu-de-donnuxe9es-initial-ajout-des-lignes-fusionnuxe9es-uxe0-leur-place}}
+
+\hypertarget{revuxe9rification-des-donees-et-chargement-dans-coviddata_prepared-variable-avec-laquelle-on-va-travailler-tout-le-long}{%
+\subsection{ReVérification des donees et Chargement dans
+CovidData\_Prepared (variable avec laquelle on va travailler tout le
+long)}\label{revuxe9rification-des-donees-et-chargement-dans-coviddata_prepared-variable-avec-laquelle-on-va-travailler-tout-le-long}}
+
+\hypertarget{ajout-dune-colonne-type_location-qui-indique-selon-une-location-si-cest-un-pays-un-continent-un-territoires-ou-duxe9pendances-une-aggregation-total-location-255}{%
+\subsection{Ajout d'une colonne type\_location qui indique selon une
+location si c'est un Pays, un Continent, un territoires ou dépendances,
+une aggregation -- Total location =
+255}\label{ajout-dune-colonne-type_location-qui-indique-selon-une-location-si-cest-un-pays-un-continent-un-territoires-ou-duxe9pendances-une-aggregation-total-location-255}}
+
+\hypertarget{analyses-des-donnuxe9es}{%
+\section{Analyses des données}\label{analyses-des-donnuxe9es}}
+
+\hypertarget{nombre-total-de-cas-covid-19-par-pays-sur-la-carte}{%
+\subsubsection{Nombre total de cas COVID-19 par pays sur la
+carte}\label{nombre-total-de-cas-covid-19-par-pays-sur-la-carte}}
+
+\includegraphics{Covid19_Analysis_And_Visualization_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\hypertarget{interpretention}{%
+\paragraph{Interpretention :}\label{interpretention}}
+
+\textbf{Le Graphe}\\
+Ce graphique montre la répartition mondiale des cas cumulés de COVID-19,
+avec un code couleur allant du violet (peu de cas) au jaune vif (très
+grand nombre de cas, jusqu'à 100 millions).
+
+\begin{itemize}
+\item
+  \textbf{En jaune} : les pays ayant enregistré le plus grand nombre de
+  cas cumulés (ex : États-Unis, Inde, Brésil, France).
+\item
+  \textbf{En orange/rouge} : pays avec plusieurs millions de cas (ex :
+  Canada, Espagne, Afrique du Sud, Russie).
+\item
+  \textbf{En violet foncé} : pays ayant relativement peu de cas déclarés
+  (ex : beaucoup de pays d'Afrique centrale, quelques pays d'Asie du
+  Sud-Est).
+
+  \textbf{Interprétation concrète}\\
+  Les pays les plus industrialisés et les plus peuplés présentent
+  souvent les nombres de cas les plus élevés, mais disposent également
+  d'une capacité de dépistage plus importante.
+\end{itemize}
+
+L'Afrique apparaît majoritairement en violet ou rouge foncé : cela peut
+traduire un nombre réel de cas plus faible, ou un sous-dépistage (moins
+de tests, moins de données disponibles).
+
+Certains pays, comme la Chine ou la Corée du Nord, peuvent sembler moins
+touchés, mais cela peut aussi résulter des politiques de déclaration ou
+d'un manque de transparence dans les données.
+
+Le graphique ne reflète pas uniquement la gravité de la situation
+sanitaire, mais aussi les capacités de test, les politiques de santé
+publique et la démographie. Il permet de visualiser rapidement les zones
+les plus touchées en nombre absolu.
+
+\hypertarget{uxe9volution-mondiale-des-cas-et-des-duxe9cuxe8s-de-covid-19}{%
+\subsubsection{Évolution Mondiale des Cas et des Décès de
+COVID-19}\label{uxe9volution-mondiale-des-cas-et-des-duxe9cuxe8s-de-covid-19}}
+
+\includegraphics{Covid19_Analysis_And_Visualization_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\hypertarget{analyse-comparative-de-levolution-de-la-covid-19-dans-les-5-pays-deurope-les-plus-impactuxe9s}{%
+\subsection{Analyse comparative de l'evolution de la Covid 19 dans les 5
+pays d'Europe les plus
+impactés}\label{analyse-comparative-de-levolution-de-la-covid-19-dans-les-5-pays-deurope-les-plus-impactuxe9s}}
+
+\hypertarget{ruxe9cupuxe9rerer-les-5-pays-deurope-les-plus-touchuxe9es-par-le-covid-19-en-se-basant-sur-le-nombre-total-de-cas-enregister-pour-chaque-pays}{%
+\subsubsection{récupérerer les 5 pays d'europe les plus touchées par le
+covid-19 en se basant sur le nombre total de cas enregister pour chaque
+pays}\label{ruxe9cupuxe9rerer-les-5-pays-deurope-les-plus-touchuxe9es-par-le-covid-19-en-se-basant-sur-le-nombre-total-de-cas-enregister-pour-chaque-pays}}
+
+\hypertarget{le-graphe-repruxe9sentant-nombre-moyen-par-jour-de-nouveaux-cas-enregistuxe9-pour-les-5-pays-les-plus-touchuxe9s-deurope}{%
+\subsubsection{Le graphe représentant nombre moyen par jour de nouveaux
+cas enregisté pour les 5 pays les plus touchés
+d'Europe}\label{le-graphe-repruxe9sentant-nombre-moyen-par-jour-de-nouveaux-cas-enregistuxe9-pour-les-5-pays-les-plus-touchuxe9s-deurope}}
+
+\hypertarget{uxe9volution-de-la-panduxe9mie-dans-cinq-pays-europuxe9ens}{%
+\paragraph{Évolution de la pandémie dans cinq pays
+européens}\label{uxe9volution-de-la-panduxe9mie-dans-cinq-pays-europuxe9ens}}
+
+Nous observons l'évolution de la pandémie pour chacun des cinq pays,
+indépendamment les uns des autres.
+
+Les cinq pays d'Europe les plus touchés par la pandémie sont : -
+\textbf{France} : 20 \% du taux de contamination en Europe -
+\textbf{Allemagne} : 19 \% - \textbf{Italie} : 13 \% -
+\textbf{Royaume-Uni} : 12 \% - \textbf{Russie} : 10 \%
+
+Le taux global de contamination dans ces pays représente environ
+\textbf{72 \%} de l'ensemble des cas détectés en Europe.
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\begin{itemize}
+\item
+  Analyse par pays
+\item
+  • France En début 2020, on observe une tendance moyennement importante
+  du nombre de cas détectés, qui prend une proportion non négligeable en
+  octobre 2020. Cette tendance reste constante jusqu'à octobre 2021 où
+  l'on observe une croissance rapide du nombre de cas.
+\end{itemize}
+
+Le nombre de nouveaux cas quotidiens a atteint son pic fin 2021 et début
+2022, frôlant les \textbf{350 000 cas par jour}, dépassant largement les
+vagues précédentes. Durant le deuxième trimestre de l'année 2022, une
+chute importante du nombre de cas est observée. Depuis, la situation
+s'améliore progressivement, bien qu'on note encore quelques petites
+vagues entre la fin du deuxième trimestre 2022 et 2023. À la fin de
+2023, le nombre de cas s'est stabilisé à un niveau assez bas, jusqu'à
+devenir \textbf{négligeable début 2024}.
+
+\begin{itemize}
+\item
+  • Allemagne L'Allemagne a également connu une forte vague début 2022,
+  avec un pic autour de \textbf{200 000 cas par jour}. Par la suite,
+  plusieurs vagues, moins importantes, se sont succédé. La courbe des
+  contaminations est restée fluctuante, mais la \textbf{tendance
+  générale est à la baisse à partir de 2023}.
+\item
+  • Italie En début 2020, une tendance modérément importante du nombre
+  de cas détectés est observée, qui augmente significativement en
+  octobre 2020. Cette tendance reste stable jusqu'à octobre 2021, moment
+  où la croissance des cas s'accélère.
+\end{itemize}
+
+Ce schéma ressemble à celui de la France, avec un pic important début
+2022, atteignant près de \textbf{180 000 cas quotidiens}. Entre 2020 et
+2023, plusieurs vagues se sont succédé, atteignant \textbf{100 000 cas
+entre juin et août 2022}, mais leur intensité a diminué avec le temps,
+montrant un \textbf{meilleur contrôle de la situation}.
+
+\begin{itemize}
+\item
+  • Royaume-Uni Un pic très élevé a été enregistré début 2022, avec près
+  de \textbf{200 000 cas quotidiens}. Ensuite, les cas chutent
+  rapidement, avec seulement quelques petites vagues par la suite. Dès
+  2023, la courbe diminue fortement et les nouveaux cas deviennent
+  \textbf{quasiment inexistants en 2024}, signe d'une sortie progressive
+  de la crise.
+\item
+  • Russie Les pics épidémiques sont plus étalés et \textbf{moins
+  élevés} qu'en France ou en Allemagne. Le pic le plus marqué atteint
+  environ \textbf{150 000 cas par jour}. Après la mi-2023, la courbe
+  devient presque plate, ce qui pourrait s'expliquer par une
+  \textbf{baisse réelle de la circulation du virus} ou une
+  \textbf{modification dans la manière de tester et de rapporter les
+  cas}.
+\end{itemize}
+
+\hypertarget{le-graphe-repruxe9sentant-nombre-moyen-par-jour-de-nouveaux-duxe9cuxe9s-enregistuxe9-pour-les-5-pays-les-plus-touchuxe9s-deurope}{%
+\subsubsection{Le graphe représentant nombre moyen par jour de nouveaux
+décés enregisté pour les 5 pays les plus touchés
+d'Europe}\label{le-graphe-repruxe9sentant-nombre-moyen-par-jour-de-nouveaux-duxe9cuxe9s-enregistuxe9-pour-les-5-pays-les-plus-touchuxe9s-deurope}}
+
+\hypertarget{interpretation}{%
+\paragraph{Interpretation}\label{interpretation}}
+
+🇫🇷 \textbf{France}\\
+En France, trois grandes vagues de décès se distinguent. La première a
+lieu entre mi-avril et mi-mai, avec un pic proche de 500 morts par jour.
+La deuxième, survenue à la fin de l'année 2020, est la plus importante,
+atteignant environ 800 décès quotidiens. La troisième, début 2022,
+avoisine les 300 morts par jour, malgré une nette baisse observée les
+mois précédents. Par la suite, chaque nouvelle vague de COVID-19
+entraîne une hausse de mortalité moins marquée.
+
+🇩🇪 \textbf{Allemagne}\\
+L'évolution en Allemagne est similaire à celle observée en France, avec
+un pic notable fin décembre 2021, autour de 900 décès par jour. Les
+vagues suivantes sont plus fréquentes mais moins intenses, avec une
+mortalité qui s'étale davantage dans le temps. À partir de la mi-2022,
+les augmentations deviennent moins fortes, bien que la courbe reste plus
+irrégulière et prolongée que dans d'autres pays.
+
+🇮🇹 \textbf{Italie}\\
+L'Italie est l'un des premiers pays touchés, avec une première vague
+particulièrement meurtrière dès mars-avril 2020, atteignant près de 800
+morts par jour. Une nouvelle vague significative apparaît en décembre
+2020. Ensuite, la mortalité diminue, même si les vagues continuent de se
+succéder.
+
+🇷🇺 \textbf{Russie}\\
+La Russie se distingue par des pics de mortalité très élevés et plus
+durables que dans les autres pays. Le pic maximal est enregistré en
+novembre 2021, avec plus de 1 200 morts par jour. Contrairement à
+l'Europe de l'Ouest, la Russie reste confrontée à une mortalité élevée
+sur une période prolongée.
+
+🇬🇧 \textbf{Royaume-Uni}\\
+Le Royaume-Uni connaît deux pics majeurs de décès : le premier en
+janvier 2021, avec près de 1 400 morts par jour --- un record parmi les
+cinq pays analysés ---, et le second fin avril 2020, avec environ 1 200
+décès quotidiens. Après ces vagues, la mortalité chute rapidement. Même
+lors des vagues de contaminations en 2022, le nombre de décès reste
+relativement faible.
+
+\textbf{Synthèse comparative}\\
+La comparaison entre les cinq pays montre que la mortalité liée à la
+COVID-19 a culminé entre fin 2020 et début 2021, avant la généralisation
+des campagnes de vaccination. Le Royaume-Uni et la Russie présentent des
+pics particulièrement élevés, tandis que l'Italie se distingue par une
+première vague très précoce dès mars 2020. À partir de 2022, la tendance
+générale est à la baisse de la mortalité dans tous les pays.
+
+\hypertarget{evolution-des-personnes-ayant-reuxe7u-au-moins-une-dose-de-vaccin}{%
+\subsubsection{Evolution des personnes ayant reçu au moins une dose de
+vaccin}\label{evolution-des-personnes-ayant-reuxe7u-au-moins-une-dose-de-vaccin}}
+
+\includegraphics{Covid19_Analysis_And_Visualization_files/figure-latex/unnamed-chunk-24-1.pdf}
+
+\hypertarget{interpretation-1}{%
+\paragraph{Interpretation}\label{interpretation-1}}
+
+Les estimations de la population que nous utilisons pour calculer les
+paramètres de mesure par habitant sont fondées sur la dernière révision
+des \textbf{Perspectives démographiques mondiales} des Nations Unies.
+
+La vaccination a été réalisée dans tous les pays, impactés ou non par la
+pandémie, et est devenue une obligation nécessaire pour les conditions
+de déplacement d'un pays à un autre sur la période de \textbf{2020 à
+2024}.
+
+L'objectif de cette étude est d'analyser la variation des doses
+administrées et la masse de population ayant reçu au moins une dose de
+vaccin, ainsi que l'impact que ces mesures ont eu sur la propagation de
+la COVID-19.\\
+\textbf{Est-elle un facteur d'évolution ou un frein ?}
+
+Pour cela, nous allons observer le graphe d'évolution du taux
+d'injection en parallèle du graphe d'évolution de la pandémie.
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{1,3 milliard} de doses ont été administrées en Europe de
+  \textbf{2021 à 2024}.
+\end{itemize}
+
+Sur le graphe d'évolution du nombre de personnes ayant reçu au moins une
+dose de vaccin, nous observons une croissance négligeable de personnes
+vaccinées début 2021. Cette tendance devient progressivement importante
+vers la fin du premier semestre 2021, pour atteindre un pic moyen au
+début du premier trimestre 2022.
+
+Après cette période, elle est restée constante pour la \textbf{France,
+l'Allemagne, l'Italie} et le \textbf{Royaume-Uni}.\\
+Le nombre de personnes vaccinées en \textbf{Russie} a évolué jusqu'au
+début du premier trimestre 2023, puis est resté constant jusqu'en 2024.
+
+\hypertarget{observation-de-luxe9volution-des-cas-et-de-lindice-de-rigueur-selons-les-5-pays-europeennes-les-plus-touchuxe9s}{%
+\subsubsection{Observation de l'Évolution des cas et de l'indice de
+rigueur selons les 5 pays europeennes les plus
+touchés}\label{observation-de-luxe9volution-des-cas-et-de-lindice-de-rigueur-selons-les-5-pays-europeennes-les-plus-touchuxe9s}}
+
+\hypertarget{interpretation-2}{%
+\paragraph{Interpretation :}\label{interpretation-2}}
+
+On constate que la gestion de la pandémie de COVID-19 et l'application
+des mesures sanitaires ont différé selon les pays européens étudiés. La
+France, l'Italie, l'Allemagne et le Royaume-Uni ont tous réagi de façon
+marquée lors des pics de contamination, en adoptant des restrictions
+très strictes, avec des indices de rigueur pouvant atteindre 88 au
+Royaume-Uni, surtout durant les années 2020 et 2021. À l'opposé, la
+Russie a adopté une attitude plus souple, son indice de rigueur
+dépassant rarement 60, même lors de vagues importantes, comme au début
+de 2022. En Russie, il est aussi fréquent de voir les restrictions
+maintenues à un niveau modéré pendant les pics, puis rapidement
+assouplies, parfois avant même que la situation ne s'améliore
+réellement. De manière générale, à partir de la mi-2022, tous ces pays
+ont progressivement levé les mesures, malgré quelques hausses du nombre
+de cas, ce qui reflète un changement de stratégie reposant davantage sur
+la vaccination, la gestion des hôpitaux et l'acceptation par la
+population. Cette analyse montre donc que chaque pays a adopté une
+approche différente pour faire face à la pandémie, malgré un contexte
+mondial~similaire.
+
+\hypertarget{analyse-comparative}{%
+\subsubsection{Analyse comparative}\label{analyse-comparative}}
+
+Le suivi de l'évolution de la COVID-19 dans les cinq pays européens les
+plus touchés -- France, Allemagne, Italie, Russie et Royaume-Uni --
+montre des dynamiques variées en termes de nombre de cas et de
+mortalité, influencées par la progression des campagnes de vaccination.
+En début de pandémie, chacun de ces pays a enregistré des pics
+importants de contamination, avec des tendances similaires jusqu'à fin
+2021, où la France et l'Italie affichent des hausses rapides, culminant
+respectivement à environ 350 000 et 180 000 cas quotidiens début 2022,
+tandis que l'Allemagne et le Royaume-Uni connaissent des pics proches de
+200 000 cas par jour. La Russie, quant à elle, présente des pics plus
+étalés et moins élevés, avec un maximum autour de 150 000 cas par jour.
+Ces variations s'expliquent notamment par des différences dans la
+gestion de la crise et les capacités de dépistage.
+
+Avec le déploiement massif de la vaccination dès 2021, une stabilisation
+puis une baisse des nouveaux cas s'observent progressivement dans la
+majorité des pays étudiés. En France, Allemagne, Italie et Royaume-Uni,
+la couverture vaccinale atteint un plateau début 2022, période à partir
+de laquelle la courbe des contaminations amorce une diminution notable,
+signe d'une efficacité du vaccin à freiner la transmission. La Russie
+diffère légèrement, avec une montée de la vaccination plus tardive,
+jusqu'au début de 2023, ce qui coïncide avec une baisse plus tardive des
+cas. La vaccination semble donc avoir joué un rôle clé non seulement en
+limitant le nombre d'infections, mais aussi en atténuant l'intensité des
+vagues successives.
+
+Cette tendance se retrouve dans l'évolution de la mortalité. Les cinq
+pays ont connu des vagues majeures de décès entre fin 2020 et début
+2021, avant la généralisation de la vaccination, avec des pics dépassant
+parfois les 1 000 morts par jour, notamment en Russie et au Royaume-Uni
+où les chiffres sont particulièrement élevés. La France et l'Italie ont
+suivi des trajectoires proches, marquées par une forte mortalité au
+début de la crise puis une diminution progressive des décès. L'Allemagne
+se distingue par des pics moins intenses mais plus prolongés dans le
+temps, certains s'étalant jusqu'en 2023. En Russie, la mortalité élevée
+persiste plus longtemps, reflétant une gestion plus complexe de la
+pandémie. Le Royaume-Uni a connu les plus hauts sommets, avec près de 1
+400 décès quotidiens en janvier 2021, avant d'observer une chute rapide
+de la mortalité à partir de 2022. Globalement, la baisse significative
+des décès dans tous ces pays à partir de 2022 correspond à
+l'augmentation de la couverture vaccinale, ainsi qu'à l'adoption de
+mesures sanitaires adaptées.
+
+Ainsi, l'analyse conjointe des cas et des décès met en lumière l'effet
+positif des campagnes de vaccination sur le contrôle de la pandémie.
+Alors que les vagues de contamination ont pu être fortes et fréquentes
+jusqu'au début de 2022, la vaccination a permis de limiter la gravité
+des cas, conduisant à une réduction progressive et durable du nombre de
+morts, même si la dynamique exacte varie selon le contexte national et
+la stratégie sanitaire de chaque pays.
+
+\hypertarget{section}{%
+\subsection{}\label{section}}
+
+\end{document}
